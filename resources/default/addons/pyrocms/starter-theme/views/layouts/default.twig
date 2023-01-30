@@ -1,0 +1,2654 @@
+<!DOCTYPE html>
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+
+<head>
+    <meta charset="UTF-8" />
+    <script>
+        if (
+            navigator.userAgent.match(/MSIE|Internet Explorer/i) ||
+            navigator.userAgent.match(/Trident\/7\..*?rv:11/i)
+        ) {
+            var href = document.location.href;
+            if (!href.match(/[?&]nowprocket/)) {
+                if (href.indexOf("?") == -1) {
+                    if (href.indexOf("#") == -1) {
+                        document.location.href = href + "?nowprocket=1";
+                    } else {
+                        document.location.href = href.replace("#", "?nowprocket=1#");
+                    }
+                } else {
+                    if (href.indexOf("#") == -1) {
+                        document.location.href = href + "&nowprocket=1";
+                    } else {
+                        document.location.href = href.replace("#", "&nowprocket=1#");
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script>
+        class RocketLazyLoadScripts {
+            constructor() {
+                (this.triggerEvents = [
+                    "keydown",
+                    "mousedown",
+                    "mousemove",
+                    "touchmove",
+                    "touchstart",
+                    "touchend",
+                    "wheel",
+                ]),
+                (this.userEventHandler = this._triggerListener.bind(this)),
+                (this.touchStartHandler = this._onTouchStart.bind(this)),
+                (this.touchMoveHandler = this._onTouchMove.bind(this)),
+                (this.touchEndHandler = this._onTouchEnd.bind(this)),
+                (this.clickHandler = this._onClick.bind(this)),
+                (this.interceptedClicks = []),
+                window.addEventListener("pageshow", (e) => {
+                        this.persisted = e.persisted;
+                    }),
+                    window.addEventListener("DOMContentLoaded", () => {
+                        this._preconnect3rdParties();
+                    }),
+                    (this.delayedScripts = {
+                        normal: [],
+                        async: [],
+                        defer: []
+                    }),
+                    (this.allJQueries = []);
+            }
+            _addUserInteractionListener(e) {
+                document.hidden ?
+                    e._triggerListener() :
+                    (this.triggerEvents.forEach((t) =>
+                            window.addEventListener(t, e.userEventHandler, {
+                                passive: !0
+                            })
+                        ),
+                        window.addEventListener("touchstart", e.touchStartHandler, {
+                            passive: !0,
+                        }),
+                        window.addEventListener("mousedown", e.touchStartHandler),
+                        document.addEventListener(
+                            "visibilitychange",
+                            e.userEventHandler
+                        ));
+            }
+            _removeUserInteractionListener() {
+                this.triggerEvents.forEach((e) =>
+                        window.removeEventListener(e, this.userEventHandler, {
+                            passive: !0,
+                        })
+                    ),
+                    document.removeEventListener(
+                        "visibilitychange",
+                        this.userEventHandler
+                    );
+            }
+            _onTouchStart(e) {
+                "HTML" !== e.target.tagName &&
+                    (window.addEventListener("touchend", this.touchEndHandler),
+                        window.addEventListener("mouseup", this.touchEndHandler),
+                        window.addEventListener("touchmove", this.touchMoveHandler, {
+                            passive: !0,
+                        }),
+                        window.addEventListener("mousemove", this.touchMoveHandler),
+                        e.target.addEventListener("click", this.clickHandler),
+                        this._renameDOMAttribute(e.target, "onclick", "rocket-onclick"));
+            }
+            _onTouchMove(e) {
+                window.removeEventListener("touchend", this.touchEndHandler),
+                    window.removeEventListener("mouseup", this.touchEndHandler),
+                    window.removeEventListener("touchmove", this.touchMoveHandler, {
+                        passive: !0,
+                    }),
+                    window.removeEventListener("mousemove", this.touchMoveHandler),
+                    e.target.removeEventListener("click", this.clickHandler),
+                    this._renameDOMAttribute(e.target, "rocket-onclick", "onclick");
+            }
+            _onTouchEnd(e) {
+                window.removeEventListener("touchend", this.touchEndHandler),
+                    window.removeEventListener("mouseup", this.touchEndHandler),
+                    window.removeEventListener("touchmove", this.touchMoveHandler, {
+                        passive: !0,
+                    }),
+                    window.removeEventListener("mousemove", this.touchMoveHandler);
+            }
+            _onClick(e) {
+                e.target.removeEventListener("click", this.clickHandler),
+                    this._renameDOMAttribute(e.target, "rocket-onclick", "onclick"),
+                    this.interceptedClicks.push(e),
+                    e.preventDefault(),
+                    e.stopPropagation(),
+                    e.stopImmediatePropagation();
+            }
+            _replayClicks() {
+                window.removeEventListener("touchstart", this.touchStartHandler, {
+                        passive: !0,
+                    }),
+                    window.removeEventListener("mousedown", this.touchStartHandler),
+                    this.interceptedClicks.forEach((e) => {
+                        e.target.dispatchEvent(
+                            new MouseEvent("click", {
+                                view: e.view,
+                                bubbles: !0,
+                                cancelable: !0,
+                            })
+                        );
+                    });
+            }
+            _renameDOMAttribute(e, t, n) {
+                e.hasAttribute &&
+                    e.hasAttribute(t) &&
+                    (event.target.setAttribute(n, event.target.getAttribute(t)),
+                        event.target.removeAttribute(t));
+            }
+            _triggerListener() {
+                this._removeUserInteractionListener(this),
+                    "loading" === document.readyState ?
+                    document.addEventListener(
+                        "DOMContentLoaded",
+                        this._loadEverythingNow.bind(this)
+                    ) :
+                    this._loadEverythingNow();
+            }
+            _preconnect3rdParties() {
+                let e = [];
+                document
+                    .querySelectorAll("script[type=rocketlazyloadscript]")
+                    .forEach((t) => {
+                        if (t.hasAttribute("src")) {
+                            const n = new URL(t.html).origin;
+                            n !== location.origin &&
+                                e.push({
+                                    src: n,
+                                    crossOrigin: t.crossOrigin ||
+                                        "module" === t.getAttribute("data-rocket-type"),
+                                });
+                        }
+                    }),
+                    (e = [...new Map(e.map((e) => [JSON.stringify(e), e])).values()]),
+                    this._batchInjectResourceHints(e, "preconnect");
+            }
+            async _loadEverythingNow() {
+                (this.lastBreath = Date.now()),
+                this._delayEventListeners(),
+                    this._delayJQueryReady(this),
+                    this._handleDocumentWrite(),
+                    this._registerAllDelayedScripts(),
+                    this._preloadAllScripts(),
+                    await this._loadScriptsFromList(this.delayedScripts.normal),
+                    await this._loadScriptsFromList(this.delayedScripts.defer),
+                    await this._loadScriptsFromList(this.delayedScripts.async);
+                try {
+                    await this._triggerDOMContentLoaded(),
+                        await this._triggerWindowLoad();
+                } catch (e) {}
+                window.dispatchEvent(new Event("rocket-allScriptsLoaded")),
+                    this._replayClicks();
+            }
+            _registerAllDelayedScripts() {
+                document
+                    .querySelectorAll("script[type=rocketlazyloadscript]")
+                    .forEach((e) => {
+                        e.hasAttribute("src") ?
+                            e.hasAttribute("async") && !1 !== e.async ?
+                            this.delayedScripts.async.push(e) :
+                            (e.hasAttribute("defer") && !1 !== e.defer) ||
+                            "module" === e.getAttribute("data-rocket-type") ?
+                            this.delayedScripts.defer.push(e) :
+                            this.delayedScripts.normal.push(e) :
+                            this.delayedScripts.normal.push(e);
+                    });
+            }
+            async _transformScript(e) {
+                return (
+                    await this._littleBreath(),
+                    new Promise((t) => {
+                        const n = document.createElement("script");
+                        [...e.attributes].forEach((e) => {
+                                let t = e.nodeName;
+                                "type" !== t &&
+                                    ("data-rocket-type" === t && (t = "type"),
+                                        n.setAttribute(t, e.nodeValue));
+                            }),
+                            e.hasAttribute("src") ?
+                            (n.addEventListener("load", t),
+                                n.addEventListener("error", t)) :
+                            ((n.text = e.text), t());
+                        try {
+                            e.parentNode.replaceChild(n, e);
+                        } catch (e) {
+                            t();
+                        }
+                    })
+                );
+            }
+            async _loadScriptsFromList(e) {
+                const t = e.shift();
+                return t ?
+                    (await this._transformScript(t), this._loadScriptsFromList(e)) :
+                    Promise.resolve();
+            }
+            _preloadAllScripts() {
+                this._batchInjectResourceHints(
+                    [
+                        ...this.delayedScripts.normal,
+                        ...this.delayedScripts.defer,
+                        ...this.delayedScripts.async,
+                    ],
+                    "preload"
+                );
+            }
+            _batchInjectResourceHints(e, t) {
+                var n = document.createDocumentFragment();
+                e.forEach((e) => {
+                        if (e.src) {
+                            const i = document.createElement("link");
+                            (i.href = e.src),
+                            (i.rel = t),
+                            "preconnect" !== t && (i.as = "script"),
+                                e.getAttribute &&
+                                "module" === e.getAttribute("data-rocket-type") &&
+                                (i.crossOrigin = !0),
+                                e.crossOrigin && (i.crossOrigin = e.crossOrigin),
+                                n.appendChild(i);
+                        }
+                    }),
+                    document.head.appendChild(n);
+            }
+            _delayEventListeners() {
+                let e = {};
+
+                function t(t, n) {
+                    !(function(t) {
+                        function n(n) {
+                            return e[t].eventsToRewrite.indexOf(n) >= 0 ? "rocket-" + n : n;
+                        }
+                        e[t] ||
+                            ((e[t] = {
+                                    originalFunctions: {
+                                        add: t.addEventListener,
+                                        remove: t.removeEventListener,
+                                    },
+                                    eventsToRewrite: [],
+                                }),
+                                (t.addEventListener = function() {
+                                    (arguments[0] = n(arguments[0])),
+                                    e[t].originalFunctions.add.apply(t, arguments);
+                                }),
+                                (t.removeEventListener = function() {
+                                    (arguments[0] = n(arguments[0])),
+                                    e[t].originalFunctions.remove.apply(t, arguments);
+                                }));
+                    })(t),
+                    e[t].eventsToRewrite.push(n);
+                }
+
+                function n(e, t) {
+                    let n = e[t];
+                    Object.defineProperty(e, t, {
+                        get: () => n || function() {},
+                        set(i) {
+                            e["rocket" + t] = n = i;
+                        },
+                    });
+                }
+                t(document, "DOMContentLoaded"),
+                    t(window, "DOMContentLoaded"),
+                    t(window, "load"),
+                    t(window, "pageshow"),
+                    t(document, "readystatechange"),
+                    n(document, "onreadystatechange"),
+                    n(window, "onload"),
+                    n(window, "onpageshow");
+            }
+            _delayJQueryReady(e) {
+                let t = window.jQuery;
+                Object.defineProperty(window, "jQuery", {
+                    get: () => t,
+                    set(n) {
+                        if (n && n.fn && !e.allJQueries.includes(n)) {
+                            n.fn.ready = n.fn.init.prototype.ready = function(t) {
+                                e.domReadyFired ?
+                                    t.bind(document)(n) :
+                                    document.addEventListener("rocket-DOMContentLoaded", () =>
+                                        t.bind(document)(n)
+                                    );
+                            };
+                            const t = n.fn.on;
+                            (n.fn.on = n.fn.init.prototype.on =
+                                function() {
+                                    if (this[0] === window) {
+                                        function e(e) {
+                                            return e
+                                                .split(" ")
+                                                .map((e) =>
+                                                    "load" === e || 0 === e.indexOf("load.") ?
+                                                    "rocket-jquery-load" :
+                                                    e
+                                                )
+                                                .join(" ");
+                                        }
+                                        "string" == typeof arguments[0] ||
+                                            arguments[0] instanceof String ?
+                                            (arguments[0] = e(arguments[0])) :
+                                            "object" == typeof arguments[0] &&
+                                            Object.keys(arguments[0]).forEach((t) => {
+                                                delete Object.assign(arguments[0], {
+                                                    [e(t)]: arguments[0][t],
+                                                })[t];
+                                            });
+                                    }
+                                    return t.apply(this, arguments), this;
+                                }),
+                            e.allJQueries.push(n);
+                        }
+                        t = n;
+                    },
+                });
+            }
+            async _triggerDOMContentLoaded() {
+                (this.domReadyFired = !0),
+                await this._littleBreath(),
+                    document.dispatchEvent(new Event("rocket-DOMContentLoaded")),
+                    await this._littleBreath(),
+                    window.dispatchEvent(new Event("rocket-DOMContentLoaded")),
+                    await this._littleBreath(),
+                    document.dispatchEvent(new Event("rocket-readystatechange")),
+                    await this._littleBreath(),
+                    document.rocketonreadystatechange &&
+                    document.rocketonreadystatechange();
+            }
+            async _triggerWindowLoad() {
+                await this._littleBreath(),
+                    window.dispatchEvent(new Event("rocket-load")),
+                    await this._littleBreath(),
+                    window.rocketonload && window.rocketonload(),
+                    await this._littleBreath(),
+                    this.allJQueries.forEach((e) =>
+                        e(window).trigger("rocket-jquery-load")
+                    ),
+                    await this._littleBreath();
+                const e = new Event("rocket-pageshow");
+                (e.persisted = this.persisted),
+                window.dispatchEvent(e),
+                    await this._littleBreath(),
+                    window.rocketonpageshow &&
+                    window.rocketonpageshow({
+                        persisted: this.persisted
+                    });
+            }
+            _handleDocumentWrite() {
+                const e = new Map();
+                document.write = document.writeln = function(t) {
+                    const n = document.currentScript,
+                        i = document.createRange(),
+                        r = n.parentElement;
+                    let o = e.get(n);
+                    void 0 === o && ((o = n.nextSibling), e.set(n, o));
+                    const s = document.createDocumentFragment();
+                    i.setStart(s, 0),
+                        s.appendChild(i.createContextualFragment(t)),
+                        r.insertBefore(s, o);
+                };
+            }
+            async _littleBreath() {
+                Date.now() - this.lastBreath > 45 &&
+                    (await this._requestAnimFrame(), (this.lastBreath = Date.now()));
+            }
+            async _requestAnimFrame() {
+                return document.hidden ?
+                    new Promise((e) => setTimeout(e)) :
+                    new Promise((e) => requestAnimationFrame(e));
+            }
+            static run() {
+                const e = new RocketLazyLoadScripts();
+                e._addUserInteractionListener(e);
+            }
+        }
+        RocketLazyLoadScripts.run();
+    </script>
+
+    <title>WellHealthLabs</title>
+
+    <link rel="preload" as="style"
+        href="https://fonts.googleapis.com/css2?family=Open+Sans+Condensed:wght@700&amp;family=Open+Sans:wght@300;400;600;700&amp;display=swap" />
+
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Open+Sans+Condensed:wght@700&amp;family=Open+Sans:wght@300;400;600;700&amp;display=swap"
+        media="print" onload="this.media='all'" />
+
+    <noscript>
+        <link rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Open+Sans+Condensed:wght@700&amp;family=Open+Sans:wght@300;400;600;700&amp;display=swap" />
+    </noscript>
+
+    <link rel="stylesheet" href="{{ asset('wp-content/cache/min/1/8806093f05cddc2d31dee7c9412255e3.css') }}"
+        media="all" data-minify="1" />
+
+    {# @include('user.component.metadata') #}
+    {% include "user.component.metadata" %}
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="icon" href="{{ asset('images/fabicon.png') }}" style="width: 30px; height: 30px;"/>
+    <link rel="pingback" href="xmlrpc.html" />
+
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+
+
+
+    <link rel="canonical" href="{{ route('index') }}" />
+    <link rel="next" href="{{ route('index') }}" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Well Health Labs" />
+
+
+
+    <meta property="og:url" content="{{ route('index') }}" />
+    <meta property="og:site_name" content="Well Health labs" />
+    <meta property="og:image" content="{{ asset('images/logoshare.png') }}" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="675" />
+    <meta property="og:image:type" content="image/png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link href="https://fonts.gstatic.com/" crossorigin rel="preconnect" />
+
+    <style type="text/css">
+        img.wp-smiley,
+        img.emoji {
+            display: inline !important;
+            border: none !important;
+            box-shadow: none !important;
+            height: 1em !important;
+            width: 1em !important;
+            margin: 0 0.07em !important;
+            vertical-align: -0.1em !important;
+            background: none !important;
+            padding: 0 !important;
+        }
+    </style>
+
+    <style id="global-styles-inline-css" type="text/css">
+        body {
+            --wp--preset--color--black: #000000;
+            --wp--preset--color--cyan-bluish-gray: #abb8c3;
+            --wp--preset--color--white: #ffffff;
+            --wp--preset--color--pale-pink: #f78da7;
+            --wp--preset--color--vivid-red: #cf2e2e;
+            --wp--preset--color--luminous-vivid-orange: #ff6900;
+            --wp--preset--color--luminous-vivid-amber: #fcb900;
+            --wp--preset--color--light-green-cyan: #7bdcb5;
+            --wp--preset--color--vivid-green-cyan: #00d084;
+            --wp--preset--color--pale-cyan-blue: #8ed1fc;
+            --wp--preset--color--vivid-cyan-blue: #0693e3;
+            --wp--preset--color--vivid-purple: #9b51e0;
+            --wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,
+                    rgba(6, 147, 227, 1) 0%,
+                    rgb(155, 81, 224) 100%);
+            --wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,
+                    rgb(122, 220, 180) 0%,
+                    rgb(0, 208, 130) 100%);
+            --wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,
+                    rgba(252, 185, 0, 1) 0%,
+                    rgba(255, 105, 0, 1) 100%);
+            --wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,
+                    rgba(255, 105, 0, 1) 0%,
+                    rgb(207, 46, 46) 100%);
+            --wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,
+                    rgb(238, 238, 238) 0%,
+                    rgb(169, 184, 195) 100%);
+            --wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,
+                    rgb(74, 234, 220) 0%,
+                    rgb(151, 120, 209) 20%,
+                    rgb(207, 42, 186) 40%,
+                    rgb(238, 44, 130) 60%,
+                    rgb(251, 105, 98) 80%,
+                    rgb(254, 248, 76) 100%);
+            --wp--preset--gradient--blush-light-purple: linear-gradient(135deg,
+                    rgb(255, 206, 236) 0%,
+                    rgb(152, 150, 240) 100%);
+            --wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,
+                    rgb(254, 205, 165) 0%,
+                    rgb(254, 45, 45) 50%,
+                    rgb(107, 0, 62) 100%);
+            --wp--preset--gradient--luminous-dusk: linear-gradient(135deg,
+                    rgb(255, 203, 112) 0%,
+                    rgb(199, 81, 192) 50%,
+                    rgb(65, 88, 208) 100%);
+            --wp--preset--gradient--pale-ocean: linear-gradient(135deg,
+                    rgb(255, 245, 203) 0%,
+                    rgb(182, 227, 212) 50%,
+                    rgb(51, 167, 181) 100%);
+            --wp--preset--gradient--electric-grass: linear-gradient(135deg,
+                    rgb(202, 248, 128) 0%,
+                    rgb(113, 206, 126) 100%);
+            --wp--preset--gradient--midnight: linear-gradient(135deg,
+                    rgb(2, 3, 129) 0%,
+                    rgb(40, 116, 252) 100%);
+            --wp--preset--duotone--dark-grayscale: url("#wp-duotone-dark-grayscale");
+            --wp--preset--duotone--grayscale: url("#wp-duotone-grayscale");
+            --wp--preset--duotone--purple-yellow: url("#wp-duotone-purple-yellow");
+            --wp--preset--duotone--blue-red: url("#wp-duotone-blue-red");
+            --wp--preset--duotone--midnight: url("#wp-duotone-midnight");
+            --wp--preset--duotone--magenta-yellow: url("#wp-duotone-magenta-yellow");
+            --wp--preset--duotone--purple-green: url("#wp-duotone-purple-green");
+            --wp--preset--duotone--blue-orange: url("#wp-duotone-blue-orange");
+            --wp--preset--font-size--small: 13px;
+            --wp--preset--font-size--medium: 20px;
+            --wp--preset--font-size--large: 36px;
+            --wp--preset--font-size--x-large: 42px;
+            --wp--preset--spacing--20: 0.44rem;
+            --wp--preset--spacing--30: 0.67rem;
+            --wp--preset--spacing--40: 1rem;
+            --wp--preset--spacing--50: 1.5rem;
+            --wp--preset--spacing--60: 2.25rem;
+            --wp--preset--spacing--70: 3.38rem;
+            --wp--preset--spacing--80: 5.06rem;
+        }
+
+        :where(.is-layout-flex) {
+            gap: 0.5em;
+        }
+
+        body .is-layout-flow>.alignleft {
+            float: left;
+            margin-inline-start: 0;
+            margin-inline-end: 2em;
+        }
+
+        body .is-layout-flow>.alignright {
+            float: right;
+            margin-inline-start: 2em;
+            margin-inline-end: 0;
+        }
+
+        body .is-layout-flow>.aligncenter {
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        body .is-layout-constrained>.alignleft {
+            float: left;
+            margin-inline-start: 0;
+            margin-inline-end: 2em;
+        }
+
+        body .is-layout-constrained>.alignright {
+            float: right;
+            margin-inline-start: 2em;
+            margin-inline-end: 0;
+        }
+
+        body .is-layout-constrained>.aligncenter {
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        body .is-layout-constrained> :where(:not(.alignleft):not(.alignright):not(.alignfull)) {
+            max-width: var(--wp--style--global--content-size);
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        body .is-layout-constrained>.alignwide {
+            max-width: var(--wp--style--global--wide-size);
+        }
+
+        body .is-layout-flex {
+            display: flex;
+        }
+
+        body .is-layout-flex {
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        body .is-layout-flex>* {
+            margin: 0;
+        }
+
+        :where(.wp-block-columns.is-layout-flex) {
+            gap: 2em;
+        }
+
+        .has-black-color {
+            color: var(--wp--preset--color--black) !important;
+        }
+
+        .has-cyan-bluish-gray-color {
+            color: var(--wp--preset--color--cyan-bluish-gray) !important;
+        }
+
+        .has-white-color {
+            color: var(--wp--preset--color--white) !important;
+        }
+
+        .has-pale-pink-color {
+            color: var(--wp--preset--color--pale-pink) !important;
+        }
+
+        .has-vivid-red-color {
+            color: var(--wp--preset--color--vivid-red) !important;
+        }
+
+        .has-luminous-vivid-orange-color {
+            color: var(--wp--preset--color--luminous-vivid-orange) !important;
+        }
+
+        .has-luminous-vivid-amber-color {
+            color: var(--wp--preset--color--luminous-vivid-amber) !important;
+        }
+
+        .has-light-green-cyan-color {
+            color: var(--wp--preset--color--light-green-cyan) !important;
+        }
+
+        .has-vivid-green-cyan-color {
+            color: var(--wp--preset--color--vivid-green-cyan) !important;
+        }
+
+        .has-pale-cyan-blue-color {
+            color: var(--wp--preset--color--pale-cyan-blue) !important;
+        }
+
+        .has-vivid-cyan-blue-color {
+            color: var(--wp--preset--color--vivid-cyan-blue) !important;
+        }
+
+        .has-vivid-purple-color {
+            color: var(--wp--preset--color--vivid-purple) !important;
+        }
+
+        .has-black-background-color {
+            background-color: var(--wp--preset--color--black) !important;
+        }
+
+        .has-cyan-bluish-gray-background-color {
+            background-color: var(--wp--preset--color--cyan-bluish-gray) !important;
+        }
+
+        .has-white-background-color {
+            background-color: var(--wp--preset--color--white) !important;
+        }
+
+        .has-pale-pink-background-color {
+            background-color: var(--wp--preset--color--pale-pink) !important;
+        }
+
+        .has-vivid-red-background-color {
+            background-color: var(--wp--preset--color--vivid-red) !important;
+        }
+
+        .has-luminous-vivid-orange-background-color {
+            background-color: var(--wp--preset--color--luminous-vivid-orange) !important;
+        }
+
+        .has-luminous-vivid-amber-background-color {
+            background-color: var(--wp--preset--color--luminous-vivid-amber) !important;
+        }
+
+        .has-light-green-cyan-background-color {
+            background-color: var(--wp--preset--color--light-green-cyan) !important;
+        }
+
+        .has-vivid-green-cyan-background-color {
+            background-color: var(--wp--preset--color--vivid-green-cyan) !important;
+        }
+
+        .has-pale-cyan-blue-background-color {
+            background-color: var(--wp--preset--color--pale-cyan-blue) !important;
+        }
+
+        .has-vivid-cyan-blue-background-color {
+            background-color: var(--wp--preset--color--vivid-cyan-blue) !important;
+        }
+
+        .has-vivid-purple-background-color {
+            background-color: var(--wp--preset--color--vivid-purple) !important;
+        }
+
+        .has-black-border-color {
+            border-color: var(--wp--preset--color--black) !important;
+        }
+
+        .has-cyan-bluish-gray-border-color {
+            border-color: var(--wp--preset--color--cyan-bluish-gray) !important;
+        }
+
+        .has-white-border-color {
+            border-color: var(--wp--preset--color--white) !important;
+        }
+
+        .has-pale-pink-border-color {
+            border-color: var(--wp--preset--color--pale-pink) !important;
+        }
+
+        .has-vivid-red-border-color {
+            border-color: var(--wp--preset--color--vivid-red) !important;
+        }
+
+        .has-luminous-vivid-orange-border-color {
+            border-color: var(--wp--preset--color--luminous-vivid-orange) !important;
+        }
+
+        .has-luminous-vivid-amber-border-color {
+            border-color: var(--wp--preset--color--luminous-vivid-amber) !important;
+        }
+
+        .has-light-green-cyan-border-color {
+            border-color: var(--wp--preset--color--light-green-cyan) !important;
+        }
+
+        .has-vivid-green-cyan-border-color {
+            border-color: var(--wp--preset--color--vivid-green-cyan) !important;
+        }
+
+        .has-pale-cyan-blue-border-color {
+            border-color: var(--wp--preset--color--pale-cyan-blue) !important;
+        }
+
+        .has-vivid-cyan-blue-border-color {
+            border-color: var(--wp--preset--color--vivid-cyan-blue) !important;
+        }
+
+        .has-vivid-purple-border-color {
+            border-color: var(--wp--preset--color--vivid-purple) !important;
+        }
+
+        .has-vivid-cyan-blue-to-vivid-purple-gradient-background {
+            background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;
+        }
+
+        .has-light-green-cyan-to-vivid-green-cyan-gradient-background {
+            background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;
+        }
+
+        .has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background {
+            background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;
+        }
+
+        .has-luminous-vivid-orange-to-vivid-red-gradient-background {
+            background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;
+        }
+
+        .has-very-light-gray-to-cyan-bluish-gray-gradient-background {
+            background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;
+        }
+
+        .has-cool-to-warm-spectrum-gradient-background {
+            background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;
+        }
+
+        .has-blush-light-purple-gradient-background {
+            background: var(--wp--preset--gradient--blush-light-purple) !important;
+        }
+
+        .has-blush-bordeaux-gradient-background {
+            background: var(--wp--preset--gradient--blush-bordeaux) !important;
+        }
+
+        .has-luminous-dusk-gradient-background {
+            background: var(--wp--preset--gradient--luminous-dusk) !important;
+        }
+
+        .has-pale-ocean-gradient-background {
+            background: var(--wp--preset--gradient--pale-ocean) !important;
+        }
+
+        .has-electric-grass-gradient-background {
+            background: var(--wp--preset--gradient--electric-grass) !important;
+        }
+
+        .has-midnight-gradient-background {
+            background: var(--wp--preset--gradient--midnight) !important;
+        }
+
+        .has-small-font-size {
+            font-size: var(--wp--preset--font-size--small) !important;
+        }
+
+        .has-medium-font-size {
+            font-size: var(--wp--preset--font-size--medium) !important;
+        }
+
+        .has-large-font-size {
+            font-size: var(--wp--preset--font-size--large) !important;
+        }
+
+        .has-x-large-font-size {
+            font-size: var(--wp--preset--font-size--x-large) !important;
+        }
+
+        .wp-block-navigation a:where(:not(.wp-element-button)) {
+            color: inherit;
+        }
+
+        :where(.wp-block-columns.is-layout-flex) {
+            gap: 2em;
+        }
+
+        .wp-block-pullquote {
+            font-size: 1.5em;
+            line-height: 1.6;
+        }
+    </style>
+
+    <style id="moove_gdpr_frontend-inline-css" type="text/css">
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content .moove-gdpr-tab-main h3.tab-title,
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content .moove-gdpr-tab-main span.tab-title,
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content .moove-gdpr-modal-left-content #moove-gdpr-menu li a,
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content .moove-gdpr-modal-left-content #moove-gdpr-menu li button,
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content .moove-gdpr-modal-left-content .moove-gdpr-branding-cnt a,
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content .moove-gdpr-modal-footer-content .moove-gdpr-button-holder a.mgbutton,
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content .moove-gdpr-modal-footer-content .moove-gdpr-button-holder button.mgbutton,
+        #moove_gdpr_cookie_modal .cookie-switch .cookie-slider:after,
+        #moove_gdpr_cookie_modal .cookie-switch .slider:after,
+        #moove_gdpr_cookie_modal .switch .cookie-slider:after,
+        #moove_gdpr_cookie_modal .switch .slider:after,
+        #moove_gdpr_cookie_info_bar .moove-gdpr-info-bar-container .moove-gdpr-info-bar-content p,
+        #moove_gdpr_cookie_info_bar .moove-gdpr-info-bar-container .moove-gdpr-info-bar-content p a,
+        #moove_gdpr_cookie_info_bar .moove-gdpr-info-bar-container .moove-gdpr-info-bar-content a.mgbutton,
+        #moove_gdpr_cookie_info_bar .moove-gdpr-info-bar-container .moove-gdpr-info-bar-content button.mgbutton,
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content .moove-gdpr-tab-main .moove-gdpr-tab-main-content h1,
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content .moove-gdpr-tab-main .moove-gdpr-tab-main-content h2,
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content .moove-gdpr-tab-main .moove-gdpr-tab-main-content h3,
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content .moove-gdpr-tab-main .moove-gdpr-tab-main-content h4,
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content .moove-gdpr-tab-main .moove-gdpr-tab-main-content h5,
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content .moove-gdpr-tab-main .moove-gdpr-tab-main-content h6,
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content.moove_gdpr_modal_theme_v2 .moove-gdpr-modal-title .tab-title,
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content.moove_gdpr_modal_theme_v2 .moove-gdpr-tab-main h3.tab-title,
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content.moove_gdpr_modal_theme_v2 .moove-gdpr-tab-main span.tab-title,
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content.moove_gdpr_modal_theme_v2 .moove-gdpr-branding-cnt a {
+            font-weight: inherit;
+        }
+
+        #moove_gdpr_cookie_modal,
+        #moove_gdpr_cookie_info_bar,
+        .gdpr_cookie_settings_shortcode_content {
+            font-family: inherit;
+        }
+
+        #moove_gdpr_save_popup_settings_button {
+            background-color: #373737;
+            color: #fff;
+        }
+
+        #moove_gdpr_save_popup_settings_button:hover {
+            background-color: #000;
+        }
+
+        #moove_gdpr_cookie_info_bar .moove-gdpr-info-bar-container .moove-gdpr-info-bar-content a.mgbutton,
+        #moove_gdpr_cookie_info_bar .moove-gdpr-info-bar-container .moove-gdpr-info-bar-content button.mgbutton {
+            background-color: #08677f;
+        }
+
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content .moove-gdpr-modal-footer-content .moove-gdpr-button-holder a.mgbutton,
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content .moove-gdpr-modal-footer-content .moove-gdpr-button-holder button.mgbutton,
+        .gdpr_cookie_settings_shortcode_content .gdpr-shr-button.button-green {
+            background-color: #08677f;
+            border-color: #08677f;
+        }
+
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content .moove-gdpr-modal-footer-content .moove-gdpr-button-holder a.mgbutton:hover,
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content .moove-gdpr-modal-footer-content .moove-gdpr-button-holder button.mgbutton:hover,
+        .gdpr_cookie_settings_shortcode_content .gdpr-shr-button.button-green:hover {
+            background-color: #fff;
+            color: #08677f;
+        }
+
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content .moove-gdpr-modal-close i,
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content .moove-gdpr-modal-close span.gdpr-icon {
+            background-color: #08677f;
+            border: 1px solid #08677f;
+        }
+
+        #moove_gdpr_cookie_info_bar span.change-settings-button.focus-g,
+        #moove_gdpr_cookie_info_bar span.change-settings-button:focus {
+            -webkit-box-shadow: 0 0 1px 3px #08677f;
+            -moz-box-shadow: 0 0 1px 3px #08677f;
+            box-shadow: 0 0 1px 3px #08677f;
+        }
+
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content .moove-gdpr-modal-close i:hover,
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content .moove-gdpr-modal-close span.gdpr-icon:hover,
+        #moove_gdpr_cookie_info_bar span[data-href]>u.change-settings-button {
+            color: #08677f;
+        }
+
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content .moove-gdpr-modal-left-content #moove-gdpr-menu li.menu-item-selected a span.gdpr-icon,
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content .moove-gdpr-modal-left-content #moove-gdpr-menu li.menu-item-selected button span.gdpr-icon {
+            color: inherit;
+        }
+
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content .moove-gdpr-modal-left-content #moove-gdpr-menu li a span.gdpr-icon,
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content .moove-gdpr-modal-left-content #moove-gdpr-menu li button span.gdpr-icon {
+            color: inherit;
+        }
+
+        #moove_gdpr_cookie_modal .gdpr-acc-link {
+            line-height: 0;
+            font-size: 0;
+            color: transparent;
+            position: absolute;
+        }
+
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content .moove-gdpr-modal-close:hover i,
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content .moove-gdpr-modal-left-content #moove-gdpr-menu li a,
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content .moove-gdpr-modal-left-content #moove-gdpr-menu li button,
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content .moove-gdpr-modal-left-content #moove-gdpr-menu li button i,
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content .moove-gdpr-modal-left-content #moove-gdpr-menu li a i,
+        #moove_gdpr_cookie_modal .moove-gdpr-modal-content .moove-gdpr-tab-main .moove-gdpr-tab-main-content a:hover,
+        #moove_gdpr_cookie_info_bar.moove-gdpr-dark-scheme .moove-gdpr-info-bar-container .moove-gdpr-info-bar-content a.mgbutton:hover,
+        #moove_gdpr_cookie_info_bar.moove-gdpr-dark-scheme .moove-gdpr-info-bar-container .moove-gdpr-info-bar-content button.mgbutton:hover,
+        #moove_gdpr_cookie_info_bar.moove-gdpr-dark-scheme .moove-gdpr-info-bar-container .moove-gdpr-info-bar-content a:hover,
+        #moove_gdpr_cookie_info_bar.moove-gdpr-dark-scheme .moove-gdpr-info-bar-container .moove-gdpr-info-bar-content button:hover,
+        #moove_gdpr_cookie_info_bar.moove-gdpr-dark-scheme .moove-gdpr-info-bar-container .moove-gdpr-info-bar-content span.change-settings-button:hover,
+        #moove_gdpr_cookie_info_bar.moove-gdpr-dark-scheme .moove-gdpr-info-bar-container .moove-gdpr-info-bar-content u.change-settings-button:hover,
+        #moove_gdpr_cookie_info_bar span[data-href]>u.change-settings-button,
+        #moove_gdpr_cookie_info_bar.moove-gdpr-dark-scheme .moove-gdpr-info-bar-container .moove-gdpr-info-bar-content a.mgbutton.focus-g,
+        #moove_gdpr_cookie_info_bar.moove-gdpr-dark-scheme .moove-gdpr-info-bar-container .moove-gdpr-info-bar-content button.mgbutton.focus-g,
+        #moove_gdpr_cookie_info_bar.moove-gdpr-dark-scheme .moove-gdpr-info-bar-container .moove-gdpr-info-bar-content a.focus-g,
+        #moove_gdpr_cookie_info_bar.moove-gdpr-dark-scheme .moove-gdpr-info-bar-container .moove-gdpr-info-bar-content button.focus-g,
+        #moove_gdpr_cookie_info_bar.moove-gdpr-dark-scheme .moove-gdpr-info-bar-container .moove-gdpr-info-bar-content a.mgbutton:focus,
+        #moove_gdpr_cookie_info_bar.moove-gdpr-dark-scheme .moove-gdpr-info-bar-container .moove-gdpr-info-bar-content button.mgbutton:focus,
+        #moove_gdpr_cookie_info_bar.moove-gdpr-dark-scheme .moove-gdpr-info-bar-container .moove-gdpr-info-bar-content a:focus,
+        #moove_gdpr_cookie_info_bar.moove-gdpr-dark-scheme .moove-gdpr-info-bar-container .moove-gdpr-info-bar-content button:focus,
+        #moove_gdpr_cookie_info_bar.moove-gdpr-dark-scheme .moove-gdpr-info-bar-container .moove-gdpr-info-bar-content span.change-settings-button.focus-g,
+        span.change-settings-button:focus,
+        #moove_gdpr_cookie_info_bar.moove-gdpr-dark-scheme .moove-gdpr-info-bar-container .moove-gdpr-info-bar-content u.change-settings-button.focus-g,
+        #moove_gdpr_cookie_info_bar.moove-gdpr-dark-scheme .moove-gdpr-info-bar-container .moove-gdpr-info-bar-content u.change-settings-button:focus {
+            color: #08677f;
+        }
+
+        #moove_gdpr_cookie_modal.gdpr_lightbox-hide {
+            display: none;
+        }
+
+        #moove_gdpr_cookie_info_bar.gdpr-full-screen-infobar .moove-gdpr-info-bar-container .moove-gdpr-info-bar-content .moove-gdpr-cookie-notice p a {
+            color: #08677f !important;
+        }
+    </style>
+
+    <script
+      type="rocketlazyloadscript"
+      data-rocket-type="text/javascript"
+      src="{{ asset('wp-includes/js/jquery/jquery.mina7a0.js?ver=3.6.1') }}"
+      id="jquery-core-js"
+      defer>
+    </script>
+
+    <script
+      type="rocketlazyloadscript"
+      data-rocket-type="text/javascript"
+      id="jquery-core-js-after">
+
+      window.addEventListener('DOMContentLoaded', function() {
+          jQuery(document).ready( function($) {
+          $( '#wp-admin-bar-my-sites-search.hide-if-no-js' ).show();
+          $( '#wp-admin-bar-my-sites-search input' ).on( 'input', function( ) {
+              var searchValRegex = new RegExp( $(this).val(), 'i');
+              $( '#wp-admin-bar-my-sites-list > li.menupop' ).hide().filter( function() {
+              return searchValRegex.test( $(this).find( '> a' ).text() );
+              }).show();
+              });
+          });
+      });
+    </script>
+
+    <script
+      type="rocketlazyloadscript"
+      data-rocket-type="text/javascript"
+      src="{{ asset('wp-includes/js/jquery/jquery-migrate.mind617.js?ver=3.3.2') }}"
+      id="jquery-migrate-js"
+      defer>
+    </script>
+
+    <script
+      type="rocketlazyloadscript"
+      data-minify="1"
+      data-rocket-type="text/javascript"
+      src="{{ asset('wp-content/cache/min/1/wp-content/themes/altn2018/js/customebad.js?ver=1668177864') }}"
+      id="custom-js"
+      defer>
+    </script>
+
+    <script
+      type="rocketlazyloadscript"
+      data-minify="1"
+      data-rocket-type="text/javascript"
+      src="{{ asset('wp-content/cache/min/1/wp-content/themes/altn2018/js/locationebad.js?ver=1668177864') }}"
+      id="location-js"
+      defer>
+    </script>
+
+    <script
+      type="rocketlazyloadscript"
+      data-rocket-type="text/javascript"
+      src="{{ asset('wp-content/themes/altn2018/js/jquery-scrollpanel-0.7.0.min276f.js?ver=0.7.0') }}"
+      id="scrollpanel-js"
+      defer>
+    </script>
+
+    <style>
+        button#responsive-menu-button,
+        #responsive-menu-container {
+            display: none;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        @media screen and (max-width: 767px) {
+            #responsive-menu-container {
+                display: block;
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                z-index: 99998;
+                padding-bottom: 5px;
+                margin-bottom: -5px;
+                outline: 1px solid transparent;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+
+            #responsive-menu-container .responsive-menu-search-box {
+                width: 100%;
+                padding: 0 2%;
+                border-radius: 2px;
+                height: 50px;
+                -webkit-appearance: none;
+            }
+
+            #responsive-menu-container.push-left,
+            #responsive-menu-container.slide-left {
+                transform: translateX(-100%);
+                -ms-transform: translateX(-100%);
+                -webkit-transform: translateX(-100%);
+                -moz-transform: translateX(-100%);
+            }
+
+            .responsive-menu-open #responsive-menu-container.push-left,
+            .responsive-menu-open #responsive-menu-container.slide-left {
+                transform: translateX(0);
+                -ms-transform: translateX(0);
+                -webkit-transform: translateX(0);
+                -moz-transform: translateX(0);
+            }
+
+            #responsive-menu-container.push-top,
+            #responsive-menu-container.slide-top {
+                transform: translateY(-100%);
+                -ms-transform: translateY(-100%);
+                -webkit-transform: translateY(-100%);
+                -moz-transform: translateY(-100%);
+            }
+
+            .responsive-menu-open #responsive-menu-container.push-top,
+            .responsive-menu-open #responsive-menu-container.slide-top {
+                transform: translateY(0);
+                -ms-transform: translateY(0);
+                -webkit-transform: translateY(0);
+                -moz-transform: translateY(0);
+            }
+
+            #responsive-menu-container.push-right,
+            #responsive-menu-container.slide-right {
+                transform: translateX(100%);
+                -ms-transform: translateX(100%);
+                -webkit-transform: translateX(100%);
+                -moz-transform: translateX(100%);
+            }
+
+            .responsive-menu-open #responsive-menu-container.push-right,
+            .responsive-menu-open #responsive-menu-container.slide-right {
+                transform: translateX(0);
+                -ms-transform: translateX(0);
+                -webkit-transform: translateX(0);
+                -moz-transform: translateX(0);
+            }
+
+            #responsive-menu-container.push-bottom,
+            #responsive-menu-container.slide-bottom {
+                transform: translateY(100%);
+                -ms-transform: translateY(100%);
+                -webkit-transform: translateY(100%);
+                -moz-transform: translateY(100%);
+            }
+
+            .responsive-menu-open #responsive-menu-container.push-bottom,
+            .responsive-menu-open #responsive-menu-container.slide-bottom {
+                transform: translateY(0);
+                -ms-transform: translateY(0);
+                -webkit-transform: translateY(0);
+                -moz-transform: translateY(0);
+            }
+
+            #responsive-menu-container,
+            #responsive-menu-container:before,
+            #responsive-menu-container:after,
+            #responsive-menu-container *,
+            #responsive-menu-container *:before,
+            #responsive-menu-container *:after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            #responsive-menu-container #responsive-menu-search-box,
+            #responsive-menu-container #responsive-menu-additional-content,
+            #responsive-menu-container #responsive-menu-title {
+                padding: 25px 5%;
+            }
+
+            #responsive-menu-container #responsive-menu,
+            #responsive-menu-container #responsive-menu ul {
+                width: 100%;
+            }
+
+            #responsive-menu-container #responsive-menu ul.responsive-menu-submenu {
+                display: none;
+            }
+
+            #responsive-menu-container #responsive-menu ul.responsive-menu-submenu.responsive-menu-submenu-open {
+                display: block;
+            }
+
+            #responsive-menu-container #responsive-menu ul.responsive-menu-submenu-depth-1 a.responsive-menu-item-link {
+                padding-left: 10%;
+            }
+
+            #responsive-menu-container #responsive-menu ul.responsive-menu-submenu-depth-2 a.responsive-menu-item-link {
+                padding-left: 15%;
+            }
+
+            #responsive-menu-container #responsive-menu ul.responsive-menu-submenu-depth-3 a.responsive-menu-item-link {
+                padding-left: 20%;
+            }
+
+            #responsive-menu-container #responsive-menu ul.responsive-menu-submenu-depth-4 a.responsive-menu-item-link {
+                padding-left: 25%;
+            }
+
+            #responsive-menu-container #responsive-menu ul.responsive-menu-submenu-depth-5 a.responsive-menu-item-link {
+                padding-left: 30%;
+            }
+
+            #responsive-menu-container li.responsive-menu-item {
+                width: 100%;
+                list-style: none;
+            }
+
+            #responsive-menu-container li.responsive-menu-item a {
+                width: 100%;
+                display: block;
+                text-decoration: none;
+                position: relative;
+            }
+
+            #responsive-menu-container #responsive-menu li.responsive-menu-item a {
+                padding: 0 5%;
+            }
+
+            #responsive-menu-container .responsive-menu-submenu li.responsive-menu-item a {
+                padding: 0 5%;
+            }
+
+            #responsive-menu-container li.responsive-menu-item a .fa {
+                margin-right: 15px;
+            }
+
+            #responsive-menu-container li.responsive-menu-item a .responsive-menu-subarrow {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                text-align: center;
+                overflow: hidden;
+            }
+
+            #responsive-menu-container li.responsive-menu-item a .responsive-menu-subarrow .fa {
+                margin-right: 0;
+            }
+
+            button#responsive-menu-button .responsive-menu-button-icon-inactive {
+                display: none;
+            }
+
+            button#responsive-menu-button {
+                z-index: 99999;
+                display: none;
+                overflow: hidden;
+                outline: none;
+            }
+
+            button#responsive-menu-button img {
+                max-width: 100%;
+            }
+
+            .responsive-menu-label {
+                display: inline-block;
+                font-weight: 600;
+                margin: 0 5px;
+                vertical-align: middle;
+            }
+
+            .responsive-menu-label .responsive-menu-button-text-open {
+                display: none;
+            }
+
+            .responsive-menu-accessible {
+                display: inline-block;
+            }
+
+            .responsive-menu-accessible .responsive-menu-box {
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .responsive-menu-label.responsive-menu-label-top,
+            .responsive-menu-label.responsive-menu-label-bottom {
+                display: block;
+                margin: 0 auto;
+            }
+
+            button#responsive-menu-button {
+                padding: 0 0;
+                display: inline-block;
+                cursor: pointer;
+                transition-property: opacity, filter;
+                transition-duration: 0.15s;
+                transition-timing-function: linear;
+                font: inherit;
+                color: inherit;
+                text-transform: none;
+                background-color: transparent;
+                border: 0;
+                margin: 0;
+                overflow: visible;
+            }
+
+            .responsive-menu-box {
+                width: 35px;
+                height: 72px;
+                display: inline-block;
+                position: relative;
+            }
+
+            .responsive-menu-inner {
+                display: block;
+                top: 50%;
+                margin-top: -1.5px;
+            }
+
+            .responsive-menu-inner,
+            .responsive-menu-inner::before,
+            .responsive-menu-inner::after {
+                width: 35px;
+                height: 3px;
+                background-color: #ffffff;
+                border-radius: 4px;
+                position: absolute;
+                transition-property: transform;
+                transition-duration: 0.15s;
+                transition-timing-function: ease;
+            }
+
+            .responsive-menu-open .responsive-menu-inner,
+            .responsive-menu-open .responsive-menu-inner::before,
+            .responsive-menu-open .responsive-menu-inner::after {
+                background-color: #ffffff;
+            }
+
+            button#responsive-menu-button:hover .responsive-menu-inner,
+            button#responsive-menu-button:hover .responsive-menu-inner::before,
+            button#responsive-menu-button:hover .responsive-menu-inner::after,
+            button#responsive-menu-button:hover .responsive-menu-open .responsive-menu-inner,
+            button#responsive-menu-button:hover .responsive-menu-open .responsive-menu-inner::before,
+            button#responsive-menu-button:hover .responsive-menu-open .responsive-menu-inner::after,
+            button#responsive-menu-button:focus .responsive-menu-inner,
+            button#responsive-menu-button:focus .responsive-menu-inner::before,
+            button#responsive-menu-button:focus .responsive-menu-inner::after,
+            button#responsive-menu-button:focus .responsive-menu-open .responsive-menu-inner,
+            button#responsive-menu-button:focus .responsive-menu-open .responsive-menu-inner::before,
+            button#responsive-menu-button:focus .responsive-menu-open .responsive-menu-inner::after {
+                background-color: #ffffff;
+            }
+
+            .responsive-menu-inner::before,
+            .responsive-menu-inner::after {
+                content: "";
+                display: block;
+            }
+
+            .responsive-menu-inner::before {
+                top: -8px;
+            }
+
+            .responsive-menu-inner::after {
+                bottom: -8px;
+            }
+
+            .responsive-menu-boring .responsive-menu-inner,
+            .responsive-menu-boring .responsive-menu-inner::before,
+            .responsive-menu-boring .responsive-menu-inner::after {
+                transition-property: none;
+            }
+
+            .responsive-menu-boring.is-active .responsive-menu-inner {
+                transform: rotate(45deg);
+            }
+
+            .responsive-menu-boring.is-active .responsive-menu-inner::before {
+                top: 0;
+                opacity: 0;
+            }
+
+            .responsive-menu-boring.is-active .responsive-menu-inner::after {
+                bottom: 0;
+                transform: rotate(-90deg);
+            }
+
+            button#responsive-menu-button {
+                width: 55px;
+                height: 55px;
+                position: absolute;
+                top: 15px;
+                left: 5%;
+            }
+
+            button#responsive-menu-button .responsive-menu-box {
+                color: #ffffff;
+            }
+
+            .responsive-menu-open button#responsive-menu-button .responsive-menu-box {
+                color: #ffffff;
+            }
+
+            .responsive-menu-label {
+                color: #ffffff;
+                font-size: 11px;
+                line-height: 13px;
+                font-family: ""Open Sans "";
+            }
+
+            button#responsive-menu-button {
+                display: inline-block;
+                transition: transform 0.5s, background-color 0.5s;
+            }
+
+            #responsive-menu-container {
+                width: 85%;
+                left: 0;
+                transition: transform 0.5s;
+                text-align: left;
+                background: #031d24;
+            }
+
+            #responsive-menu-container #responsive-menu-wrapper {
+                background: #031d24;
+            }
+
+            #responsive-menu-container #responsive-menu-additional-content {
+                color: #ffffff;
+            }
+
+            #responsive-menu-container .responsive-menu-search-box {
+                background: #ffffff;
+                border: 2px solid #dadada;
+                color: #333333;
+            }
+
+            #responsive-menu-container .responsive-menu-search-box:-ms-input-placeholder {
+                color: #c7c7cd;
+            }
+
+            #responsive-menu-container .responsive-menu-search-box::-webkit-input-placeholder {
+                color: #c7c7cd;
+            }
+
+            #responsive-menu-container .responsive-menu-search-box:-moz-placeholder {
+                color: #c7c7cd;
+                opacity: 1;
+            }
+
+            #responsive-menu-container .responsive-menu-search-box::-moz-placeholder {
+                color: #c7c7cd;
+                opacity: 1;
+            }
+
+            #responsive-menu-container .responsive-menu-item-link,
+            #responsive-menu-container #responsive-menu-title,
+            #responsive-menu-container .responsive-menu-subarrow {
+                transition: background-color 0.5s, border-color 0.5s, color 0.5s;
+            }
+
+            #responsive-menu-container #responsive-menu-title {
+                background-color: #031d24;
+                color: #ffffff;
+                font-size: 30px;
+                text-align: left;
+            }
+
+            #responsive-menu-container #responsive-menu-title a {
+                color: #ffffff;
+                font-size: 30px;
+                text-decoration: none;
+            }
+
+            #responsive-menu-container #responsive-menu-title a:hover {
+                color: #ffffff;
+            }
+
+            #responsive-menu-container #responsive-menu-title:hover {
+                background-color: #024051;
+                color: #ffffff;
+            }
+
+            #responsive-menu-container #responsive-menu-title:hover a {
+                color: #ffffff;
+            }
+
+            #responsive-menu-container #responsive-menu-title #responsive-menu-title-image {
+                display: inline-block;
+                vertical-align: middle;
+                max-width: 100%;
+                margin-bottom: 15px;
+            }
+
+            #responsive-menu-container #responsive-menu-title #responsive-menu-title-image img {
+                max-width: 100%;
+            }
+
+            #responsive-menu-container #responsive-menu>li.responsive-menu-item:first-child>a {
+                border-top: 1px solid #9aa5a7;
+            }
+
+            #responsive-menu-container #responsive-menu li.responsive-menu-item .responsive-menu-item-link {
+                font-size: 16px;
+            }
+
+            #responsive-menu-container #responsive-menu li.responsive-menu-item a {
+                line-height: 40px;
+                border-bottom: 1px solid #9aa5a7;
+                color: #ffffff;
+                background-color: #031d24;
+                height: 40px;
+            }
+
+            #responsive-menu-container #responsive-menu li.responsive-menu-item a:hover {
+                color: #ffffff;
+                background-color: #024051;
+                border-color: #ffffff;
+            }
+
+            #responsive-menu-container #responsive-menu li.responsive-menu-item a:hover .responsive-menu-subarrow {
+                color: #024051;
+                border-color: #024051;
+                background-color: #031d24;
+            }
+
+            #responsive-menu-container #responsive-menu li.responsive-menu-item a:hover .responsive-menu-subarrow.responsive-menu-subarrow-active {
+                color: #024051;
+                border-color: #024051;
+                background-color: #031d24;
+            }
+
+            #responsive-menu-container #responsive-menu li.responsive-menu-item a .responsive-menu-subarrow {
+                right: 0;
+                height: 39px;
+                line-height: 39px;
+                width: 40px;
+                color: #031d24;
+                border-left: 1px solid #031d24;
+                background-color: #031d24;
+            }
+
+            #responsive-menu-container #responsive-menu li.responsive-menu-item a .responsive-menu-subarrow.responsive-menu-subarrow-active {
+                color: #024051;
+                border-color: #024051;
+                background-color: #031d24;
+            }
+
+            #responsive-menu-container #responsive-menu li.responsive-menu-item a .responsive-menu-subarrow.responsive-menu-subarrow-active:hover {
+                color: #024051;
+                border-color: #024051;
+                background-color: #031d24;
+            }
+
+            #responsive-menu-container #responsive-menu li.responsive-menu-item a .responsive-menu-subarrow:hover {
+                color: #024051;
+                border-color: #024051;
+                background-color: #031d24;
+            }
+
+            #responsive-menu-container #responsive-menu li.responsive-menu-current-item>.responsive-menu-item-link {
+                background-color: #024051;
+                color: #ffffff;
+                border-color: #ffffff;
+            }
+
+            #responsive-menu-container #responsive-menu li.responsive-menu-current-item>.responsive-menu-item-link:hover {
+                background-color: #024051;
+                color: #ffffff;
+                border-color: #ffffff;
+            }
+
+            #responsive-menu-container #responsive-menu ul.responsive-menu-submenu li.responsive-menu-item .responsive-menu-item-link {
+                font-size: 16px;
+                text-align: left;
+            }
+
+            #responsive-menu-container #responsive-menu ul.responsive-menu-submenu li.responsive-menu-item a {
+                height: 40px;
+                line-height: 0px;
+                border-bottom: 1px solid #9aa5a7;
+                color: #ffffff;
+                background-color: #031d24;
+            }
+
+            #responsive-menu-container #responsive-menu ul.responsive-menu-submenu li.responsive-menu-item a:hover {
+                color: #ffffff;
+                background-color: #024051;
+                border-color: #ffffff;
+            }
+
+            #responsive-menu-container #responsive-menu ul.responsive-menu-submenu li.responsive-menu-item a:hover .responsive-menu-subarrow {
+                color: #024051;
+                border-color: #024051;
+                background-color: #024051;
+            }
+
+            #responsive-menu-container #responsive-menu ul.responsive-menu-submenu li.responsive-menu-item a:hover .responsive-menu-subarrow.responsive-menu-subarrow-active {
+                color: #024051;
+                border-color: #024051;
+                background-color: #024051;
+            }
+
+            #responsive-menu-container #responsive-menu ul.responsive-menu-submenu li.responsive-menu-item a .responsive-menu-subarrow {
+                left: unset;
+                right: 0;
+                height: 39px;
+                line-height: 39px;
+                width: 40px;
+                color: #031d24;
+                border-left: 1px solid #031d24 !important;
+                border-right: unset !important;
+                background-color: #031d24;
+            }
+
+            #responsive-menu-container #responsive-menu ul.responsive-menu-submenu li.responsive-menu-item a .responsive-menu-subarrow.responsive-menu-subarrow-active {
+                color: #024051;
+                border-color: #024051;
+                background-color: #024051;
+            }
+
+            #responsive-menu-container #responsive-menu ul.responsive-menu-submenu li.responsive-menu-item a .responsive-menu-subarrow.responsive-menu-subarrow-active:hover {
+                color: #024051;
+                border-color: #024051;
+                background-color: #024051;
+            }
+
+            #responsive-menu-container #responsive-menu ul.responsive-menu-submenu li.responsive-menu-item a .responsive-menu-subarrow:hover {
+                color: #024051;
+                border-color: #024051;
+                background-color: #024051;
+            }
+
+            #responsive-menu-container #responsive-menu ul.responsive-menu-submenu li.responsive-menu-current-item>.responsive-menu-item-link {
+                background-color: #024051;
+                color: #ffffff;
+                border-color: #ffffff;
+            }
+
+            #responsive-menu-container #responsive-menu ul.responsive-menu-submenu li.responsive-menu-current-item>.responsive-menu-item-link:hover {
+                background-color: #024051;
+                color: #ffffff;
+                border-color: #ffffff;
+            }
+
+            navmain {
+                display: none !important;
+            }
+        }
+    </style>
+
+    <script type="rocketlazyloadscript">
+          window.addEventListener('DOMContentLoaded', function() {
+            jQuery(document).ready(function($) {
+
+          var ResponsiveMenu = {
+              trigger: '#responsive-menu-button',
+              animationSpeed:500,
+              breakpoint:767,
+              pushButton: 'off',
+              animationType: 'slide',
+              animationSide: 'left',
+              pageWrapper: '',
+              isOpen: false,
+              triggerTypes: 'click',
+              activeClass: 'is-active',
+              container: '#responsive-menu-container',
+              openClass: 'responsive-menu-open',
+              accordion: 'off',
+              activeArrow: '▲',
+              inactiveArrow: '▼',
+              wrapper: '#responsive-menu-wrapper',
+              closeOnBodyClick: 'off',
+              closeOnLinkClick: 'off',
+              itemTriggerSubMenu: 'off',
+              linkElement: '.responsive-menu-item-link',
+              subMenuTransitionTime:200,
+              openMenu: function() {
+                  $(this.trigger).addClass(this.activeClass);
+                  $('html').addClass(this.openClass);
+                  $('.responsive-menu-button-icon-active').hide();
+                  $('.responsive-menu-button-icon-inactive').show();
+                  this.setButtonTextOpen();
+                  this.setWrapperTranslate();
+                  this.isOpen = true;
+              },
+              closeMenu: function() {
+                  $(this.trigger).removeClass(this.activeClass);
+                  $('html').removeClass(this.openClass);
+                  $('.responsive-menu-button-icon-inactive').hide();
+                  $('.responsive-menu-button-icon-active').show();
+                  this.setButtonText();
+                  this.clearWrapperTranslate();
+                  this.isOpen = false;
+              },
+              setButtonText: function() {
+                  if($('.responsive-menu-button-text-open').length > 0 && $('.responsive-menu-button-text').length > 0) {
+                      $('.responsive-menu-button-text-open').hide();
+                      $('.responsive-menu-button-text').show();
+                  }
+              },
+              setButtonTextOpen: function() {
+                  if($('.responsive-menu-button-text').length > 0 && $('.responsive-menu-button-text-open').length > 0) {
+                      $('.responsive-menu-button-text').hide();
+                      $('.responsive-menu-button-text-open').show();
+                  }
+              },
+              triggerMenu: function() {
+                  this.isOpen ? this.closeMenu() : this.openMenu();
+              },
+              triggerSubArrow: function(subarrow) {
+                  var sub_menu = $(subarrow).parent().siblings('.responsive-menu-submenu');
+                  var self = this;
+                  if(this.accordion == 'on') {
+
+                      /* Get Top Most Parent and the siblings */
+
+                      var top_siblings = sub_menu.parents('.responsive-menu-item-has-children').last().siblings('.responsive-menu-item-has-children');
+                      var first_siblings = sub_menu.parents('.responsive-menu-item-has-children').first().siblings('.responsive-menu-item-has-children');
+
+                      /* Close up just the top level parents to key the rest as it was */
+
+                      top_siblings.children('.responsive-menu-submenu').slideUp(self.subMenuTransitionTime, 'linear').removeClass('responsive-menu-submenu-open');
+
+                      /* Set each parent arrow to inactive */
+
+                      top_siblings.each(function() {
+                          $(this).find('.responsive-menu-subarrow').first().html(self.inactiveArrow);
+                          $(this).find('.responsive-menu-subarrow').first().removeClass('responsive-menu-subarrow-active');
+                      });
+
+                      /* Now Repeat for the current item siblings */
+
+                      first_siblings.children('.responsive-menu-submenu').slideUp(self.subMenuTransitionTime, 'linear').removeClass('responsive-menu-submenu-open');
+                      first_siblings.each(function() {
+                          $(this).find('.responsive-menu-subarrow').first().html(self.inactiveArrow);
+                          $(this).find('.responsive-menu-subarrow').first().removeClass('responsive-menu-subarrow-active');
+                      });
+                  }
+                  if(sub_menu.hasClass('responsive-menu-submenu-open')) {
+                      sub_menu.slideUp(self.subMenuTransitionTime, 'linear').removeClass('responsive-menu-submenu-open');
+                      $(subarrow).html(this.inactiveArrow);
+                      $(subarrow).removeClass('responsive-menu-subarrow-active');
+                  } else {
+                      sub_menu.slideDown(self.subMenuTransitionTime, 'linear').addClass('responsive-menu-submenu-open');
+                      $(subarrow).html(this.activeArrow);
+                      $(subarrow).addClass('responsive-menu-subarrow-active');
+                  }
+              },
+              menuHeight: function() {
+                  return $(this.container).height();
+              },
+              menuWidth: function() {
+                  return $(this.container).width();
+              },
+              wrapperHeight: function() {
+                  return $(this.wrapper).height();
+              },
+              setWrapperTranslate: function() {
+                  switch(this.animationSide) {
+                      case 'left':
+                          translate = 'translateX(' + this.menuWidth() + 'px)'; break;
+                      case 'right':
+                          translate = 'translateX(-' + this.menuWidth() + 'px)'; break;
+                      case 'top':
+                          translate = 'translateY(' + this.wrapperHeight() + 'px)'; break;
+                      case 'bottom':
+                          translate = 'translateY(-' + this.menuHeight() + 'px)'; break;
+                  }
+                  if(this.animationType == 'push') {
+                      $(this.pageWrapper).css({'transform':translate});
+                      $('html, body').css('overflow-x', 'hidden');
+                  }
+                  if(this.pushButton == 'on') {
+                      $('#responsive-menu-button').css({'transform':translate});
+                  }
+              },
+              clearWrapperTranslate: function() {
+                  var self = this;
+                  if(this.animationType == 'push') {
+                      $(this.pageWrapper).css({'transform':''});
+                      setTimeout(function() {
+                          $('html, body').css('overflow-x', '');
+                      }, self.animationSpeed);
+                  }
+                  if(this.pushButton == 'on') {
+                      $('#responsive-menu-button').css({'transform':''});
+                  }
+              },
+              init: function() {
+                  var self = this;
+                  $(this.trigger).on(this.triggerTypes, function(e){
+                      e.stopPropagation();
+                      self.triggerMenu();
+                  });
+                  $(this.trigger).mouseup(function(){
+                      $(self.trigger).blur();
+                  });
+                  $('.responsive-menu-subarrow').on('click', function(e) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      self.triggerSubArrow(this);
+                  });
+                  $(window).resize(function() {
+                      if($(window).width() > self.breakpoint) {
+                          if(self.isOpen){
+                              self.closeMenu();
+                          }
+                      } else {
+                          if($('.responsive-menu-open').length>0){
+                              self.setWrapperTranslate();
+                          }
+                      }
+                  });
+                  if(this.closeOnLinkClick == 'on') {
+                      $(this.linkElement).on('click', function(e) {
+                          e.preventDefault();
+                          /* Fix for when close menu on parent clicks is on */
+                          if(self.itemTriggerSubMenu == 'on' && $(this).is('.responsive-menu-item-has-children > ' + self.linkElement)) {
+                              return;
+                          }
+                          old_href = $(this).attr('href');
+                          old_target = typeof $(this).attr('target') == 'undefined' ? '_self' : $(this).attr('target');
+                          if(self.isOpen) {
+                              if($(e.target).closest('.responsive-menu-subarrow').length) {
+                                  return;
+                              }
+                              self.closeMenu();
+                              setTimeout(function() {
+                                  window.open(old_href, old_target);
+                              }, self.animationSpeed);
+                          }
+                      });
+                  }
+                  if(this.closeOnBodyClick == 'on') {
+                      $(document).on('click', 'body', function(e) {
+                          if(self.isOpen) {
+                              if($(e.target).closest('#responsive-menu-container').length || $(e.target).closest('#responsive-menu-button').length) {
+                                  return;
+                              }
+                          }
+                          self.closeMenu();
+                      });
+                  }
+                  if(this.itemTriggerSubMenu == 'on') {
+                      $('.responsive-menu-item-has-children > ' + this.linkElement).on('click', function(e) {
+                          e.preventDefault();
+                          self.triggerSubArrow($(this).children('.responsive-menu-subarrow').first());
+                      });
+                  }
+                  if (jQuery('#responsive-menu-button').css('display') != 'none') {
+                      $('#responsive-menu-button,#responsive-menu a.responsive-menu-item-link, #responsive-menu-wrapper input').focus( function() {
+                          $(this).addClass('is-active');
+                          $('html').addClass('responsive-menu-open');
+                          $('#responsive-menu li').css({"opacity": "1", "margin-left": "0"});
+                      });
+
+                      $('#responsive-menu-button, a.responsive-menu-item-link,#responsive-menu-wrapper input').focusout( function() {
+                          if ( $(this).last('#responsive-menu-button a.responsive-menu-item-link') ) {
+                              $(this).removeClass('is-active');
+                              $('html').removeClass('responsive-menu-open');
+                          }
+                      });
+                  }
+                  $('#responsive-menu a.responsive-menu-item-link').keydown(function(event) {
+                      console.log( event.keyCode );
+                      if ( [13,27,32,35,36,37,38,39,40].indexOf( event.keyCode) == -1) {
+                          return;
+                      }
+                      var link = $(this);
+                      switch(event.keyCode) {
+                          case 13:
+                          link.click();
+                              break;
+                          case 27:
+                          var dropdown = link.parent('li').parents('.responsive-menu-submenu');
+                              if ( dropdown.length > 0 ) {
+                                  dropdown.hide();
+                                  dropdown.prev().focus();
+                              }
+                              break;
+
+                          case 32:
+                          var dropdown = link.parent('li').find('.responsive-menu-submenu');
+                              if ( dropdown.length > 0 ) {
+                                  dropdown.show();
+                                  dropdown.find('a, input, button, textarea').first().focus();
+                              }
+                              break;
+
+                          case 35:
+                          var dropdown = link.parent('li').find('.responsive-menu-submenu');
+                              if ( dropdown.length > 0 ) {
+                                  dropdown.hide();
+                              }
+                              $(this).parents('#responsive-menu').find('a.responsive-menu-item-link').filter(':visible').last().focus();
+                              break;
+                          case 36:
+                          var dropdown = link.parent('li').find('.responsive-menu-submenu');
+                              if( dropdown.length > 0 ) {
+                                  dropdown.hide();
+                              }
+                              $(this).parents('#responsive-menu').find('a.responsive-menu-item-link').filter(':visible').first().focus();
+                              break;
+                          case 37:
+                          case 38:
+                              event.preventDefault();
+                              event.stopPropagation();
+                              if ( link.parent('li').prevAll('li').filter(':visible').first().length == 0) {
+                                  link.parent('li').nextAll('li').filter(':visible').last().find('a').first().focus();
+                              } else {
+                                  link.parent('li').prevAll('li').filter(':visible').first().find('a').first().focus();
+                              }
+                              break;
+                          case 39:
+                          case 40:
+                              event.preventDefault();
+                              event.stopPropagation();
+                              if( link.parent('li').nextAll('li').filter(':visible').first().length == 0) {
+                                  link.parent('li').prevAll('li').filter(':visible').last().find('a').first().focus();
+                              } else {
+                                  link.parent('li').nextAll('li').filter(':visible').first().find('a').first().focus();
+                              }
+                              break;
+                      }
+                  });
+              }
+          };
+          ResponsiveMenu.init();
+      });});
+    </script>
+
+    <style type="text/css" id="wp-custom-css">
+        .wp-video {
+            width: 100% !important;
+        }
+
+        .mejs-container {
+            margin: 0 auto;
+        }
+
+        #page .team .person .image img {
+            max-width: 120px;
+        }
+
+        @media screen and (max-width: 799px) {
+            #page .traveling .traveling-image img {
+                height: 200px;
+                width: 83px;
+            }
+        }
+    </style>
+
+    <noscript>
+        <style id="rocket-lazyload-nojs-css">
+            .rll-youtube-player,
+            [data-lazy-src] {
+                display: none !important;
+            }
+        </style>
+    </noscript>
+
+    <!-- <meta name="facebook-domain-verification" content="a7q6u5fo2uotasxbcwko16uq3zdera" /> -->
+
+    <script type="application/ld+json">
+      {
+        "@context": "http://schema.org",
+        "@type": "WebSite",
+        "url": "{{ route('index') }}",
+        "name": "Well Health Labs",
+        "description": "Well Health Labs",
+        "publisher": {
+          "@type": "DiagnosticLab",
+          "name": "Well Health Labs®",
+          "@id": "#anylabtestnow",
+          "url": "{{ route('index') }}",
+          "description": "Well Health Labs",
+          "logo": {
+            "@type": "ImageObject",
+            "name": "Well Health Labs",
+            "url": "{{ asset('images/logo.png') }}",
+            "width": "222",
+            "height": "44"
+          },
+          "telephone": "+123-123-1234",
+          "sameAs": [
+            "{{ route('index') }}",
+            "{{ route('index') }}",
+            "{{ route('index') }}",
+            "{{ route('index') }}",
+            "{{ route('index') }}"
+          ],
+          "availableTest": [
+            {
+              "@type": "MedicalTest",
+              "name": "General Health Test",
+              "description": "Get an accurate snapshot of your overall health.",
+              "url": "{{ route('index') }}"
+            },
+            {
+              "@type": "MedicalTest",
+              "name": "DNA Test",
+              "description": "Questions about your family? The answers lies in your DNA.",
+              "url": "{{ route('index') }}"
+            },
+            {
+              "@type": "MedicalTest",
+              "name": "STD Test",
+              "description": "Get answers to life's most personal questions.",
+              "url": "{{ route('index') }}"
+            },
+            {
+              "@type": "MedicalTest",
+              "name": "Drugs and Alcohol Test",
+              "description": "Peace of mind for employers, employees, parents and families.",
+              "url": "{{ route('index') }}"
+            }
+          ]
+        },
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "{{ route('index') }}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
+
+    <link rel="stylesheet" href="/css/stylesheet.css" />
+
+    <!-- <style id='divi-dynamic-critical-inline-css' type='text/css'> </style> -->
+
+    <!--BEGIN: TRACKING CODE MANAGER BY INTELLYWP.COM IN HEAD//-->
+    <!-- Google Tag Manager -->
+
+      <style id="et-critical-inline-css">
+
+        .et_pb_section_1.et_pb_section {
+            padding-top: 0px;
+            padding-right: 0px;
+            padding-bottom: 0px;
+            padding-left: 0px
+        }
+
+        .et_pb_section_1 {
+            overflow: hidden
+        }
+
+        /* text color */
+        .et_pb_cta_1.et_pb_promo h2,
+        .et_pb_cta_1.et_pb_promo h1.et_pb_module_header,
+        .et_pb_cta_1.et_pb_promo h3.et_pb_module_header,
+        .et_pb_cta_1.et_pb_promo h4.et_pb_module_header,
+        .et_pb_cta_1.et_pb_promo h5.et_pb_module_header,
+        .et_pb_cta_1.et_pb_promo h6.et_pb_module_header,
+        .et_pb_cta_0.et_pb_promo h2,
+        .et_pb_cta_0.et_pb_promo h1.et_pb_module_header,
+        .et_pb_cta_0.et_pb_promo h3.et_pb_module_header,
+        .et_pb_cta_0.et_pb_promo h4.et_pb_module_header,
+        .et_pb_cta_0.et_pb_promo h5.et_pb_module_header,
+        .et_pb_cta_0.et_pb_promo h6.et_pb_module_header {
+            font-weight: 700 !important;
+            font-size: 30px !important;
+            color: #ffffff !important;
+            text-transform: uppercase;
+        }
+
+        .et_pb_cta_0.et_pb_promo .et_pb_promo_description div,
+        .et_pb_cta_1.et_pb_promo .et_pb_promo_description div,
+        .et_pb_cta_3.et_pb_promo .et_pb_promo_description div,
+        .et_pb_cta_2.et_pb_promo .et_pb_promo_description div {
+            font-size: 16px;
+            color: #ffffff !important;
+            line-height: 1.5em
+        }
+
+         /* text color */
+        .et_pb_cta_2.et_pb_promo h2,
+        .et_pb_cta_2.et_pb_promo h1.et_pb_module_header,
+        .et_pb_cta_2.et_pb_promo h3.et_pb_module_header,
+        .et_pb_cta_2.et_pb_promo h4.et_pb_module_header,
+        .et_pb_cta_2.et_pb_promo h5.et_pb_module_header,
+        .et_pb_cta_2.et_pb_promo h6.et_pb_module_header {
+            font-weight: 700 !important;
+            font-size: 30px !important;
+            color: #ffffff !important;
+            text-align: left !important;
+            text-transform: uppercase;
+        }
+
+        .et_pb_cta_3.et_pb_promo h2,
+        .et_pb_cta_3.et_pb_promo h1.et_pb_module_header,
+        .et_pb_cta_3.et_pb_promo h3.et_pb_module_header,
+        .et_pb_cta_3.et_pb_promo h4.et_pb_module_header,
+        .et_pb_cta_3.et_pb_promo h5.et_pb_module_header,
+        .et_pb_cta_3.et_pb_promo h6.et_pb_module_header {
+            font-weight: 600 !important;
+            font-size: 30px !important;
+            color: #ffffff !important;
+            text-transform: uppercase;
+        }
+
+        .et_pb_column_0 {
+            background-color: #155284;
+            padding-top: 40px;
+            padding-right: 0px;
+            padding-bottom: 40px;
+            padding-left: 0px
+        }
+
+        .et_pb_column_1 {
+            background-color: #185C94;
+            padding-top: 40px;
+            padding-right: 0px;
+            padding-bottom: 40px;
+            padding-left: 0px
+        }
+
+        .et_pb_column_2 {
+            background-color: #2D6DA2;
+            padding-top: 40px;
+            padding-right: 0px;
+            padding-bottom: 40px;
+            padding-left: 0px
+        }
+
+        .et_pb_column_3 {
+            background-color: #397AAF;
+            padding-top: 40px;
+            padding-right: 0px;
+            padding-bottom: 40px;
+            padding-left: 0px
+        }
+
+        .et_pb_row_0.et_pb_row {
+            padding-top: 0px !important;
+            padding-right: 0px !important;
+            padding-bottom: 0px !important;
+            padding-left: 0px !important;
+            margin-top: 0px !important;
+            margin-bottom: 0px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            padding-top: 0px;
+            padding-right: 0px;
+            padding-bottom: 0;
+            padding-left: 0px
+        }
+
+        .et_pb_module.et_pb_text_align_left {
+            text-align: left;
+        }
+
+        .et_pb_cta_3.et_pb_promo, .et_pb_cta_0.et_pb_promo, .et_pb_cta_2.et_pb_promo, .et_pb_cta_1.et_pb_promo {
+          padding-top: 20px!important;
+          padding-right: 40px!important;
+          padding-bottom: 20px!important;
+          padding-left: 40px!important;
+        }
+
+        @media only screen and (min-width:981px) {
+
+            .et_pb_slider .et_pb_slide_0.et_pb_slide>.et_pb_container,
+            .et_pb_slider .et_pb_slide_1.et_pb_slide>.et_pb_container,
+            .et_pb_slider .et_pb_slide_2.et_pb_slide>.et_pb_container {
+                width: 60%
+            }
+
+            .et_pb_slide_0 .et_pb_container,
+            .et_pb_slide_2 .et_pb_container {
+                float: left !important
+            }
+
+            .et_pb_slide_1 .et_pb_container {
+                float: right !important
+            }
+
+            .et_pb_row_0,
+            body #page-container .et-db #et-boc .et-l .et_pb_row_0.et_pb_row,
+            body.et_pb_pagebuilder_layout.single #page-container #et-boc .et-l .et_pb_row_0.et_pb_row,
+            body.et_pb_pagebuilder_layout.single.et_full_width_page #page-container #et-boc .et-l .et_pb_row_0.et_pb_row {
+                width: 100%;
+                max-width: 100%
+            }
+        }
+
+        @media only screen and (max-width:980px) {
+
+            .et_pb_slider .et_pb_slide_1.et_pb_slide>.et_pb_container,
+            .et_pb_slider .et_pb_slide_0.et_pb_slide>.et_pb_container,
+            .et_pb_slider .et_pb_slide_2.et_pb_slide>.et_pb_container {
+                width: 80%
+            }
+
+            .et_pb_slide_0 .et_pb_container,
+            .et_pb_slide_1 .et_pb_container,
+            .et_pb_slide_2 .et_pb_container {
+                float: none !important
+            }
+
+            .et_pb_fullwidth_slider_0 .et_pb_slide_description,
+            .et_pb_slider_fullwidth_off.et_pb_fullwidth_slider_0 .et_pb_slide_description {
+                padding-top: 70px;
+                padding-right: 0px;
+                padding-bottom: 70px;
+                padding-left: 0px
+            }
+
+            .et_pb_fullwidth_slider_0 {
+                margin-top: 0px !important;
+                margin-right: 0px !important;
+                margin-bottom: 0px !important;
+                margin-left: 0px !important
+            }
+
+            body #page-container .et_pb_section .et_pb_fullwidth_slider_0.et_pb_slider .et_pb_more_button.et_pb_button:before {
+                line-height: inherit;
+                font-size: inherit !important;
+                margin-left: -1.3em;
+                right: auto;
+                display: inline-block;
+                opacity: 1;
+                content: attr(data-icon);
+                font-family: ETmodules !important;
+                font-weight: 400 !important
+            }
+
+            body #page-container .et_pb_section .et_pb_fullwidth_slider_0.et_pb_slider .et_pb_more_button.et_pb_button:after {
+                display: none
+            }
+
+            body #page-container .et_pb_section .et_pb_fullwidth_slider_0.et_pb_slider .et_pb_more_button.et_pb_button:hover:before {
+                margin-left: .3em;
+                right: auto;
+                margin-left: -1.3em
+            }
+
+            .et_pb_row_0,
+            body #page-container .et-db #et-boc .et-l .et_pb_row_0.et_pb_row,
+            body.et_pb_pagebuilder_layout.single #page-container #et-boc .et-l .et_pb_row_0.et_pb_row,
+            body.et_pb_pagebuilder_layout.single.et_full_width_page #page-container #et-boc .et-l .et_pb_row_0.et_pb_row {
+                width: 100%;
+                max-width: 100%
+            }
+
+            .et_pb_cta_3.et_pb_promo,
+            .et_pb_cta_0.et_pb_promo,
+            .et_pb_cta_1.et_pb_promo {
+                padding-top: 20px !important;
+                padding-right: 55px !important;
+                padding-bottom: 20px !important;
+                padding-left: 55px !important
+            }
+
+            .et_pb_cta_2.et_pb_promo {
+                padding-top: 20px !important;
+                padding-right: 55px !important;
+                padding-bottom: 20px !important;
+                padding-left: 55px !important;
+                margin-top: 0px !important;
+                margin-right: 0px !important;
+                margin-bottom: 0px !important;
+                margin-left: 0px !important
+            }
+
+            .et_pb_slider .et_pb_slide_1.et_pb_slide .et_pb_slide_description .et_pb_slide_title,
+            .et_pb_slider .et_pb_slide_0.et_pb_slide .et_pb_slide_description .et_pb_slide_title,
+            .et_pb_slider .et_pb_slide_2.et_pb_slide .et_pb_slide_description .et_pb_slide_title {
+                font-size: 35px !important
+            }
+
+            .et_pb_slider .et_pb_slide_2 .et_pb_slide_description,
+            .et_pb_slider_fullwidth_off .et_pb_slide_2 .et_pb_slide_description,
+            .et_pb_slider .et_pb_slide_1 .et_pb_slide_description,
+            .et_pb_slider_fullwidth_off .et_pb_slide_1 .et_pb_slide_description,
+            .et_pb_slider .et_pb_slide_0 .et_pb_slide_description,
+            .et_pb_slider_fullwidth_off .et_pb_slide_0 .et_pb_slide_description {
+                padding-top: 0px !important;
+                padding-right: 0px !important;
+                padding-bottom: 0px !important;
+                padding-left: 0px !important
+            }
+        }
+
+        @media only screen and (max-width:767px) {
+
+            .et_pb_slide_2 .et_pb_container,
+            .et_pb_slide_0 .et_pb_container,
+            .et_pb_slide_1 .et_pb_container {
+                float: none !important
+            }
+
+            .et_pb_fullwidth_slider_0.et_pb_slider .et_pb_slide_description .et_pb_slide_title {
+                font-size: 27px !important
+            }
+
+            body #page-container .et_pb_section .et_pb_fullwidth_slider_0.et_pb_slider .et_pb_more_button.et_pb_button:before {
+                line-height: inherit;
+                font-size: inherit !important;
+                margin-left: -1.3em;
+                right: auto;
+                display: inline-block;
+                opacity: 1;
+                content: attr(data-icon);
+                font-family: ETmodules !important;
+                font-weight: 400 !important
+            }
+
+            body #page-container .et_pb_section .et_pb_fullwidth_slider_0.et_pb_slider .et_pb_more_button.et_pb_button:after {
+                display: none
+            }
+
+            body #page-container .et_pb_section .et_pb_fullwidth_slider_0.et_pb_slider .et_pb_more_button.et_pb_button:hover:before {
+                margin-left: .3em;
+                right: auto;
+                margin-left: -1.3em
+            }
+
+            .et_pb_row_0.et_pb_row {
+                padding-top: 0px !important;
+                padding-right: 0px !important;
+                padding-bottom: 0px !important;
+                padding-left: 0px !important;
+                padding-top: 0px !important;
+                padding-right: 0px !important;
+                padding-bottom: 0px !important;
+                padding-left: 0px !important
+            }
+
+            .et_pb_cta_2.et_pb_promo,
+            .et_pb_cta_0.et_pb_promo,
+            .et_pb_cta_3.et_pb_promo {
+                padding-top: 20px !important;
+                padding-right: 55px !important;
+                padding-bottom: 20px !important;
+                padding-left: 55px !important
+            }
+
+            .et_pb_cta_1.et_pb_promo {
+                padding-right: 55px !important;
+                padding-left: 55px !important
+            }
+
+            .et_pb_slider .et_pb_slide_0.et_pb_slide .et_pb_slide_description .et_pb_slide_title,
+            .et_pb_slider .et_pb_slide_1.et_pb_slide .et_pb_slide_description .et_pb_slide_title,
+            .et_pb_slider .et_pb_slide_2.et_pb_slide .et_pb_slide_description .et_pb_slide_title {
+                font-size: 22px !important
+            }
+
+            .et_pb_slider .et_pb_slide_2 .et_pb_slide_description,
+            .et_pb_slider_fullwidth_off .et_pb_slide_2 .et_pb_slide_description,
+            .et_pb_slider .et_pb_slide_1 .et_pb_slide_description,
+            .et_pb_slider_fullwidth_off .et_pb_slide_1 .et_pb_slide_description,
+            .et_pb_slider .et_pb_slide_0 .et_pb_slide_description,
+            .et_pb_slider_fullwidth_off .et_pb_slide_0 .et_pb_slide_description {
+                padding-top: 0px !important;
+                padding-right: 0px !important;
+                padding-bottom: 0px !important;
+                padding-left: 0px !important
+            }
+        }
+      </style>
+
+
+    <!-- inline div section css -->
+
+</head>
+<body data-rsssl="1" class="home blog responsive-menu-slide-left">
+
+   <!-- header -->
+    {# @include('user.layout.header') #}
+    {% include "user.layout.header" %}
+
+
+    <!-- main content -->
+    {# @yield('content') #}
+    {% block content %}{% endblock %}
+
+   <!-- footer -->
+    {# @include('user.layout.footer') #}
+    {% include "user.layout.footer" %}
+
+
+
+    <!--copyscapeskip-->
+
+
+    <!--/copyscapeskip-->
+
+    <button
+      id="responsive-menu-button"
+      tabindex="1"
+      class="responsive-menu-button responsive-menu-boring"
+      type="button"
+      aria-label="Menu">
+
+      <span class="responsive-menu-box">
+        <span class="responsive-menu-inner"></span>
+      </span>
+
+      <span class="responsive-menu-label responsive-menu-label-bottom">
+        <span class="responsive-menu-button-text">MENU</span>
+      </span>
+
+    </button>
+
+    <div id="responsive-menu-container" class="slide-left">
+      <div
+        id="responsive-menu-wrapper"
+        role="navigation"
+        aria-label="main-responsive">
+        <ul id="responsive-menu" class="">
+          <li
+            id="responsive-menu-item-17801"
+            class="menu-item menu-item-type-custom menu-item-object-custom current-menu-item current_page_item menu-item-home responsive-menu-item responsive-menu-current-item"
+            role="none">
+            <a
+              href="#"
+              class="responsive-menu-item-link"
+              tabindex="1"
+              role="menuitem"
+              >Home</a
+            >
+          </li>
+          <li
+            id="responsive-menu-item-17800"
+            class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children responsive-menu-item responsive-menu-item-has-children"
+            role="none"
+          >
+            <a
+              href="#"
+              class="responsive-menu-item-link"
+              tabindex="1"
+              role="menuitem">
+              MOLECULAR/PRC
+              <div class="responsive-menu-subarrow">▼</div></a>
+            
+          </li>
+          <li
+            id="responsive-menu-item-17804"
+            class="the-franchise menu-item menu-item-type-post_type menu-item-object-page responsive-menu-item"
+            role="none">
+            <a
+              href="{{ route('index') }}"
+              class="responsive-menu-item-link"
+              tabindex="1"
+              role="menuitem">
+              URINALYSIS</a>
+          </li>
+          <li
+            id="responsive-menu-item-20989"
+            class="covid menu-item menu-item-type-post_type menu-item-object-page responsive-menu-item"
+            role="none">
+            <a
+              href="{{ route('index') }}"
+              class="responsive-menu-item-link"
+              tabindex="1"
+              role="menuitem">
+              GENETIC</a>
+          </li>
+          <li
+            id="responsive-menu-item-17805"
+            class="the-franchise menu-item menu-item-type-post_type menu-item-object-page responsive-menu-item"
+            role="none">
+            <a
+              href="{{ route('index') }}"
+              class="responsive-menu-item-link"
+              tabindex="1"
+              role="menuitem">
+              ABOUT</a>
+          </li>
+          <li
+            id="responsive-menu-item-17806"
+            class="the-franchise menu-item menu-item-type-post_type menu-item-object-page responsive-menu-item"
+            role="none">
+            <a
+              href="{{ route('index') }}"
+              class="responsive-menu-item-link"
+              tabindex="1"
+              role="menuitem">
+              CONTACT US</a>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+
+    <script
+      type="rocketlazyloadscript"
+      data-rocket-type="text/javascript"
+      id="rocket-preload-links-js-after">
+      (function() {
+      "use strict";var r="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e},e=function(){function i(e,t){for(var n=0;n<t.length;n++){var i=t[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(e,t,n){return t&&i(e.prototype,t),n&&i(e,n),e}}();function i(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}var t=function(){function n(e,t){i(this,n),this.browser=e,this.config=t,this.options=this.browser.options,this.prefetched=new Set,this.eventTime=null,this.threshold=1111,this.numOnHover=0}return e(n,[{key:"init",value:function(){!this.browser.supportsLinkPrefetch()||this.browser.isDataSaverModeOn()||this.browser.isSlowConnection()||(this.regex={excludeUris:RegExp(this.config.excludeUris,"i"),images:RegExp(".("+this.config.imageExt+")$","i"),fileExt:RegExp(".("+this.config.fileExt+")$","i")},this._initListeners(this))}},{key:"_initListeners",value:function(e){-1<this.config.onHoverDelay&&document.addEventListener("mouseover",e.listener.bind(e),e.listenerOptions),document.addEventListener("mousedown",e.listener.bind(e),e.listenerOptions),document.addEventListener("touchstart",e.listener.bind(e),e.listenerOptions)}},{key:"listener",value:function(e){var t=e.target.closest("a"),n=this._prepareUrl(t);if(null!==n)switch(e.type){case"mousedown":case"touchstart":this._addPrefetchLink(n);break;case"mouseover":this._earlyPrefetch(t,n,"mouseout")}}},{key:"_earlyPrefetch",value:function(t,e,n){var i=this,r=setTimeout(function(){if(r=null,0===i.numOnHover)setTimeout(function(){return i.numOnHover=0},1e3);else if(i.numOnHover>i.config.rateThrottle)return;i.numOnHover++,i._addPrefetchLink(e)},this.config.onHoverDelay);t.addEventListener(n,function e(){t.removeEventListener(n,e,{passive:!0}),null!==r&&(clearTimeout(r),r=null)},{passive:!0})}},{key:"_addPrefetchLink",value:function(i){return this.prefetched.add(i.href),new Promise(function(e,t){var n=document.createElement("link");n.rel="prefetch",n.href=i.href,n.onload=e,n.onerror=t,document.head.appendChild(n)}).catch(function(){})}},{key:"_prepareUrl",value:function(e){if(null===e||"object"!==(void 0===e?"undefined":r(e))||!1 in e||-1===["http:","https:"].indexOf(e.protocol))return null;var t=e.href.substring(0,this.config.siteUrl.length),n=this._getPathname(e.href,t),i={original:e.href,protocol:e.protocol,origin:t,pathname:n,href:t+n};return this._isLinkOk(i)?i:null}},{key:"_getPathname",value:function(e,t){var n=t?e.substring(this.config.siteUrl.length):e;return n.startsWith("index.html")||(n="/"+n),this._shouldAddTrailingSlash(n)?n+"/":n}},{key:"_shouldAddTrailingSlash",value:function(e){return this.config.usesTrailingSlash&&!e.endsWith("index.html")&&!this.regex.fileExt.test(e)}},{key:"_isLinkOk",value:function(e){return null!==e&&"object"===(void 0===e?"undefined":r(e))&&(!this.prefetched.has(e.href)&&e.origin===this.config.siteUrl&&-1===e.href.indexOf("?")&&-1===e.href.indexOf("#")&&!this.regex.excludeUris.test(e.href)&&!this.regex.images.test(e.href))}}],[{key:"run",value:function(){"undefined"!=typeof RocketPreloadLinksConfig&&new n(new RocketBrowserCompatibilityChecker({capture:!0,passive:!0}),RocketPreloadLinksConfig).init()}}]),n}();t.run();
+      }());
+    </script>
+
+    <script
+      type="rocketlazyloadscript"
+      data-minify="1"
+      data-rocket-type="text/javascript"
+      src="{{ asset('wp-content/cache/min/1/wp-content/themes/altn2018/js/testsearchebad.js?ver=1668177864') }}"
+      id="testsearch-js"
+      defer>
+    </script>
+
+    <script
+      type="rocketlazyloadscript"
+      data-rocket-type="text/javascript"
+      src="{{ asset('wp-content/themes/altn2018/js/parallax.min4963.js?ver=1.1') }}"
+      id="parallax-js"
+      defer>
+    </script>
+
+    <script
+      type="rocketlazyloadscript"
+      data-minify="1"
+      data-rocket-type="text/javascript"
+      src="{{ asset('wp-content/cache/min/1/wp-content/themes/altn2018/js/sliderebad.js?ver=1668177864') }}"
+      id="slider-js"
+      defer>
+    </script>
+
+    <script
+      type="rocketlazyloadscript"
+      data-minify="1"
+      data-rocket-type="text/javascript"
+      src="{{ asset('wp-content/cache/min/1/wp-content/themes/altn2018/js/jquery.mousewheelebad.js?ver=1668177864') }}"
+      id="mousewheel-js"
+      defer>
+    </script>
+
+    <script
+      type="rocketlazyloadscript"
+      data-rocket-type="text/javascript"
+      src="{{ asset('wp-content/themes/altn2018/js/jquery-ui.min0028.js?ver=1.13.1') }}"
+      id="jqueryui-js-js"
+      defer>
+    </script>
+
+    <script
+      type="rocketlazyloadscript"
+      data-minify="1"
+      data-rocket-type="text/javascript"
+      src="{{ asset('wp-content/cache/min/1/wp-content/themes/altn2018/js/cartebad.js?ver=1668177864') }}"
+      id="cart-js"
+      defer >
+    </script>
+
+    <script
+      type="rocketlazyloadscript"
+      data-minify="1"
+      data-rocket-type="text/javascript"
+      src="{{ asset('wp-content/cache/min/1/wp-content/plugins/gdpr-cookie-compliance/dist/scripts/mainebad.js?ver=1668177864"
+      id="moove_gdpr_frontend-js') }}"
+      defer
+    ></script>
+
+    <script
+      type="rocketlazyloadscript"
+      data-rocket-type="text/javascript"
+      id="moove_gdpr_frontend-js-after">
+      var gdpr_consent__strict = "true"
+      var gdpr_consent__thirdparty = "true"
+      var gdpr_consent__advanced = "true"
+      var gdpr_consent__cookies = "strict|thirdparty|advanced"
+    </script>
+
+    <script
+      type="rocketlazyloadscript"
+      data-minify="1"
+      data-rocket-type="text/javascript"
+      src="{{ asset('wp-content/cache/min/1/wp-content/plugins/gdpr-cookie-compliance-addon/assets/js/gdpr_cc_addonebad.js?ver=1668177864') }}"
+      id="gdpr_cc_addon_frontend-js"
+      defer
+    ></script>
+
+    <!--copyscapeskip-->
+    
+    <!--/copyscapeskip-->
+    <script>
+      window.lazyLoadOptions = {
+        elements_selector: "iframe[data-lazy-src]",
+        data_src: "lazy-src",
+        data_srcset: "lazy-srcset",
+        data_sizes: "lazy-sizes",
+        class_loading: "lazyloading",
+        class_loaded: "lazyloaded",
+        threshold: 300,
+        callback_loaded: function (element) {
+          if (
+            element.tagName === "IFRAME" &&
+            element.dataset.rocketLazyload == "fitvidscompatible"
+          ) {
+            if (element.classList.contains("lazyloaded")) {
+              if (typeof window.jQuery != "undefined") {
+                if (jQuery.fn.fitVids) {
+                  jQuery(element).parent().fitVids();
+                }
+              }
+            }
+          }
+        },
+      };
+      window.addEventListener(
+        "LazyLoad::Initialized",
+        function (e) {
+          var lazyLoadInstance = e.detail.instance;
+          if (window.MutationObserver) {
+            var observer = new MutationObserver(function (mutations) {
+              var image_count = 0;
+              var iframe_count = 0;
+              var rocketlazy_count = 0;
+              mutations.forEach(function (mutation) {
+                for (var i = 0; i < mutation.addedNodes.length; i++) {
+                  if (
+                    typeof mutation.addedNodes[i].getElementsByTagName !==
+                    "function"
+                  ) {
+                    continue;
+                  }
+                  if (
+                    typeof mutation.addedNodes[i].getElementsByClassName !==
+                    "function"
+                  ) {
+                    continue;
+                  }
+                  images = mutation.addedNodes[i].getElementsByTagName("img");
+                  is_image = mutation.addedNodes[i].tagName == "IMG";
+                  iframes =
+                    mutation.addedNodes[i].getElementsByTagName("iframe");
+                  is_iframe = mutation.addedNodes[i].tagName == "IFRAME";
+                  rocket_lazy =
+                    mutation.addedNodes[i].getElementsByClassName(
+                      "rocket-lazyload"
+                    );
+                  image_count += images.length;
+                  iframe_count += iframes.length;
+                  rocketlazy_count += rocket_lazy.length;
+                  if (is_image) {
+                    image_count += 1;
+                  }
+                  if (is_iframe) {
+                    iframe_count += 1;
+                  }
+                }
+              });
+              if (image_count > 0 || iframe_count > 0 || rocketlazy_count > 0) {
+                lazyLoadInstance.update();
+              }
+            });
+            var b = document.getElementsByTagName("body")[0];
+            var config = { childList: !0, subtree: !0 };
+            observer.observe(b, config);
+          }
+        },
+        !1
+      );
+    </script>
+
+    <script
+      data-no-minify="1"
+      async
+      src="{{ asset('wp-content/plugins/wp-rocket/assets/js/lazyload/17.5/lazyload.min.js') }}">
+    </script>
+
+    <script type="rocketlazyloadscript" data-rocket-type="text/javascript">
+      if(typeof dataLayer !== 'undefined')
+      {
+      	dataLayer.push({'ANYLABLocation': 1});
+      }
+    </script>
+
+    <div id="schedule-attention" class="hide">
+      <div class="square"></div>
+    </div>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com/" />
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+
+    <script
+      type="rocketlazyloadscript"
+      src="{{ asset('kit.fontawesome.com/50996de306.js') }}"
+      crossorigin="anonymous"
+      defer>
+    </script>
+  </body>
+</html>

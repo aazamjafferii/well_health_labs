@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="25px" height="25px" viewBox="0 0 25 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>Select/Normal</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="3.Mobile.320.locations_more" transform="translate(-285.000000, -178.000000)">
+            <g id="Back">
+                <g id="Group-4" transform="translate(0.000000, 155.000000)">
+                    <g id="Group" transform="translate(12.000000, 23.000000)">
+                        <g id="Locator-Copy">
+                            <g id="Less/Normal" transform="translate(273.000000, 0.000000)">
+                                <circle id="Oval" stroke="#FFFFFF" cx="12.5" cy="12.5" r="11.5"></circle>
+                                <g id="Add" fill-rule="evenodd" transform="translate(5.000000, 11.000000)" fill="#FFFFFF">
+                                    <path d="M8.09210526,0.907894737 L6.90789474,0.907894737 L0.592105263,0.907894737 C0.265094556,0.907894737 0,1.17298929 0,1.5 C0,1.82701071 0.265094556,2.09210526 0.592105263,2.09210526 L6.90789474,2.09210526 L8.09210526,2.09210526 L14.4078947,2.09210526 C14.7349054,2.09210526 15,1.82701071 15,1.5 C15,1.17298929 14.7349054,0.907894737 14.4078947,0.907894737 L8.09210526,0.907894737 Z" id="Shape"></path>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

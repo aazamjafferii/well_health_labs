@@ -1,0 +1,110 @@
+<section class="testimonials">
+        <div
+            class="parallax-window image"
+            data-parallax="scroll"
+            data-image-src="{{ asset('images/unnamed.png') }}">
+            <div class="inside">
+            <section class="reviews">
+                <div class="slider">
+                <ul>
+                    {% for testimonial in block.testimonials %}
+                        <li>
+                    <div class="text">
+                    
+                        {{ testimonial.simple_textarea }}
+                    </div>
+
+                    <div class="name">
+                        {{ testimonial.testimonial_name }}
+                    </div>
+                    <div class="location">
+                        {{ testimonial.testimonial_location }}
+                    </div>
+                    
+                    
+                    </li>
+                    
+                    {% endfor %}
+                    {# <li>
+                    <div class="text">
+
+                        {{ block.simple_textarea }}
+                        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." 
+                    </div>
+                    <div class="name">
+                        {{ block.simple_text }}
+                        Eric G.
+                    </div>
+                    <div class="location">
+                        {{ block.simple_text }}
+                        Newark, DE
+                    </div>
+                    </li> #}
+
+                    {# <li>
+                    <div class="text">
+                        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+                    </div>
+                    <div class="name">Eric G.</div>
+                    <div class="location">Newark, DE</div>
+                    </li> #}
+
+                    {# <li>
+                    <div class="text">
+                        “Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.”
+                    </div>
+                    <div class="name">Heather</div>
+                    <div class="location">Austin, TX</div>
+                    </li> #}
+
+                    {# <li>
+                    <div class="text">
+                        “Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.”
+                    </div>
+                    <div class="name">Bob</div>
+                    <div class="location">Sarasota, FL</div>
+                    </li> #}
+
+                    {# <li>
+                    <div class="text">
+                        “Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.”
+                    </div>
+                    <div class="name">Virginia Jones, J.D., SPHR</div>
+                    <div class="location">
+                        Human Resources Manager<br />
+                        Durham, NC
+                    </div>
+                    </li> #}
+
+                    {# <li>
+                    <div class="text">
+                        “Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.”
+                    </div>
+                    <div class="name">James Siegel<br />UglyFitness™</div>
+                    <div class="location">President<br />Wauwatosa, WI</div>
+                    </li> #}
+
+                    {# <li>
+                    <div class="text">
+                        “Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.”
+                    </div>
+                    <div class="name">
+                        K.L.<br />
+                        Physician
+                    </div>
+                    <div class="location">Chandler, Arizona</div>
+                    </li> #}
+
+                    {# <li>
+                    <div class="text">
+                        “Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.”
+                    </div>
+                    <div class="name">Chanel B.</div>
+                    <div class="location">Nashville, TN</div>
+                    </li> #}
+                </ul>
+                </div>
+            </section>
+            </div>
+        </div>
+        </section>

@@ -1,0 +1,54 @@
+<section class="column2" style="margin-bottom: -10px;">
+	<div class="parallax-window image" data-parallax="scroll" data-image-src="{{ asset('wp-content/uploads/2018/08/anylabtestnow-people.jpg') }}">
+		<div class="inside">
+			<article class="columns container">
+
+				{% for text_editor in block.text_editor_repeater %}
+
+					{{ text_editor.text_editor.render|raw }}
+
+				{% endfor %}
+
+				{# <div class="column middle even">
+				                <article class="content-text" style="margin-left: 15px; margin-right: 15px;">
+				                    <h2>Advantages</h2>
+				
+				                    <div class="text">
+				                    - Quicker turnaround times <br/>
+				                    - Supprot 24/7, 365 days a year <br/>
+				                    - No commitment required <br/>
+				                    - Medical assistants provided <br/>
+				                    - Training provided <br/>
+				                    - Direct contact with physicians, face to face<br/>
+				                    </div>
+				
+				                    <div class="buttonsite">
+				                    <a href="#" class="button" title="Contact Us">
+				                        Contact Us
+				                    </a>
+				                    </div>
+				                </article>
+				                </div> #}
+
+				{# <div class="column middle" >
+				                <article class="content-text" style="margin-left: 15px; margin-right: 15px; margin-bottom:">
+				                    <h2>Get your results</h2>
+				
+				                    <div class="text" style="margin-bottom: 110px;">
+				                    Well Healths Labs the ability  to process over  24 tests every four hours. We will provide testing  results  to the  employees and company in the less than  48 hours.
+				                    </div>
+				
+				                    <div class="buttonsite">
+				                    <a
+				                        href="#"
+				                        class="button"
+				                        title="Contact Us"
+				                        >Contact Us</a
+				                    >
+				                    </div>
+				                </article>
+				                </div> #}
+			</article>
+		</div>
+	</div>
+</section>

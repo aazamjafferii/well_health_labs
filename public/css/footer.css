@@ -1,0 +1,27 @@
+footer .footer-information aside ul {
+    color: #fff;
+}
+footer .footer-information aside ul li {
+    padding-bottom: 0;
+}
+footer .footer-information aside ul li.heading {
+    margin-bottom: 22px;
+}
+footer .footer-information aside ul li.heading a {
+    cursor: default;
+    font-size: 30px;
+    font-weight: 600;
+    pointer-events: none;
+    text-transform: uppercase;
+}
+
+footer .footer-information aside ul li.title {
+    margin-bottom: 20px;
+}
+footer .footer-information aside ul li.title a {
+    font-size: 20px;
+}
+
+footer .footer-information aside ul li.description {
+    margin-bottom: 50px;
+}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="13px" height="8px" viewBox="0 0 13 8" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>Arrow_simple_rightt</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Mobile.320.locations_close" transform="translate(-286.000000, -914.000000)" fill="#FFFFFF" stroke="#FFFFFF">
+            <g id="Group-3" transform="translate(0.000000, 884.000000)">
+                <g id="Arrow_simple_rightt" transform="translate(292.500000, 34.000000) rotate(-90.000000) translate(-292.500000, -34.000000) translate(289.000000, 28.000000)">
+                    <path d="M1.24329997,0.621376231 C1.0691513,0.455339044 0.797771229,0.460238285 0.629455421,0.632458005 C0.461139612,0.804677726 0.456351427,1.08235217 0.61862485,1.26054004 L5.33315403,6.08441786 L0.61862485,10.73946 C0.456351427,10.9176478 0.461139612,11.1953223 0.629455421,11.367542 C0.797771229,11.5397617 1.0691513,11.544661 1.24329997,11.3786238 L6.5,6.08441786 L1.24329997,0.621376231 Z" id="Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

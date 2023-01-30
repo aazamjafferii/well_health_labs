@@ -1,0 +1,135 @@
+<header>
+  <div class="noresponsive">
+    <nav id="second-nav" class="">
+      <div class="inside">
+        <div class="menu-top-menu-container">
+          <ul id="menu-top-menu" class="noresponsive">
+            <li
+              id="menu-item-17796"
+              class="corporate-site menu-item menu-item-type-custom menu-item-object-custom menu-item-17796">
+              <a title="Corporate Site" href="#">Corporate Site</a>
+            </li>
+            <li
+              id="menu-item-82"
+              class="menu-item menu-item-type-custom menu-item-object-custom menu-item-82">
+               <img
+                  width="20"
+                  height="25"
+                  src="{{ asset('wp-content/uploads/2018/08/location-icon.png') }}"
+                  alt="Locations" style="margin-bottom: -8px; margin-right: 5px;"/>
+              <a title="Visit Us" href="#">
+
+                Visit Us</a>
+
+            </li>
+            <li style="margin-bottom: 10px;"
+              id="menu-item-83"
+              class="menu-item menu-item-type-custom menu-item-object-custom menu-item-83">
+              <img
+                  width="30"
+                  height="30"
+                  src="{{ asset('images/icons8-phone-48.png') }}"
+                  alt="Locations" style="margin-bottom: -8px;"/>
+              <a title="Call Us: 123 123 1234" href="#">
+                  Call Us: 123 123 1234</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <nav id="navmain" class="">
+      <div class="menu-main-menu-container">
+
+        <ul id="menu-main-menu" class="noresponsive" style="margin-top: 50px;margin-bottom: 10px;">
+          <li
+            id="nav-menu-item-80"
+            class="main-menu-item menu-item-even menu-item-depth-0 menu-item menu-item-type-post_type menu-item-object-page" style="margin-top:-30px;">
+            <a
+              title="wellHealthLabs"
+              href="{{ url('/') }}"
+              class="menu-link main-menu-link">
+                  <img
+                  width="222"
+                  height="44"
+                  src="{{ asset('images/logo.png') }}"
+                  alt="Well Health Labs"
+                  title="Well Health Labs" style="margin-right: 200px;"/>
+             </a>
+          </li>
+          {{ menu('header').getLinks()|raw }}
+          {# <li
+            id="nav-menu-item-94"
+            class="main-menu-item menu-item-even menu-item-depth-0 menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children">
+            <a
+              title="Molecular/PCR"
+              href="molecular-pcr"
+              class="menu-link main-menu-link">
+              Molecular/PCR
+            </a>
+
+          </li> #}
+          {# <li
+            id="nav-menu-item-80"
+            class="main-menu-item menu-item-even menu-item-depth-0 menu-item menu-item-type-post_type menu-item-object-page">
+            <a
+              title="Urinalysis"
+              href="#"
+              class="menu-link main-menu-link">
+              Urinalysis</a>
+          </li> #}
+          {# <li
+            id="nav-menu-item-20988"
+            class="main-menu-item menu-item-even menu-item-depth-0 covid menu-item menu-item-type-post_type menu-item-object-page">
+            <a
+              title="Genetic"
+              href="#"
+              class="menu-link main-menu-link">
+              Genetic</a>
+          </li> #}
+          {# <li
+            id="nav-menu-item-79"
+            class="main-menu-item menu-item-even menu-item-depth-0 menu-item menu-item-type-post_type menu-item-object-page">
+            <a
+              title="About"
+              href="#"
+              class="menu-link main-menu-link">
+              About</a>
+          </li> #}
+          {# <li
+            id="nav-menu-item-78"
+            class="main-menu-item menu-item-even menu-item-depth-0 menu-item menu-item-type-post_type menu-item-object-page">
+            <a
+              title="contactUs"
+              href="#"
+              class="menu-link main-menu-link">
+              Contact Us</a>
+          </li> #}
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+  <!-- mobile responsive search ? -->
+  <div class="responsive header-responsive">
+    <section class="top">
+      <div class="inside">
+        <div class="container">
+          <div class="menu"></div>
+          <nav class="logo">
+            <a href="#">
+              <img
+                width="222"
+                height="44"
+                src="{{ asset('images/logo.png') }}"
+                alt="wellHealthsLabs"
+                title="wellHealthsLabs"/>
+            </a>
+          </nav>
+          <aside id="cartwoo"></aside>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</header>

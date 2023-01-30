@@ -1,0 +1,212 @@
+<section class="categories">
+        <div class="inside96">
+
+            {{ block.heading.render|raw }}
+            {# <h2>Lab Testing For Any And Every Need</h2> #}
+
+            <div class="info">
+                {{ block.simple_text|raw }}
+                
+                {# Select a category for testing options that will help <br /> #}
+                {# guide you on your path to wellness. #}
+            </div>
+
+            <section class="pages flex" style="">
+
+            {% for ei in block.editor_image_icon %}
+                
+                <a class="general-health" href="#" title="Urinalysis- uti w/drug resistance, std/sti">
+
+                <article class="category">
+                
+                    <div class="image" style="background-image: url({{ asset('storage/'~ei.image.path) }});">
+                    <div class="icon">
+                        <img width="43" height="42" src="{{ asset('storage/'~ei.icon.path) }}" alt=""/>
+                    </div>
+                    </div>
+
+                    {{ ei.text_editor.render|raw }}
+                    
+                </article>
+            </a>
+
+            {% endfor %}
+
+            {# <a
+                class="general-health"
+                href="#"
+                title="Urinalysis- uti w/drug resistance, std/sti"
+                ><article class="category">
+                <div
+                    class="image"
+                    style="
+                    background-image: url(wp-content/uploads/2018/08/wellness.jpg);">
+                    <div class="icon">
+                    <img
+                        width="43"
+                        height="42"
+                        src="{{ asset('wp-content/uploads/2018/08/wellness-icon.png') }}"
+                        alt=""/>
+                    </div>
+                </div>
+
+                <h3 style="font-size: 25px;">Urinalysis- uti w/ drug resistance</h3>
+                <div class="text">
+                    Well healths labs offers best testing results.
+                    <img
+                    width="16"
+                    height="16"
+                    src="{{ asset('images/link-button.png') }}"
+                    alt=""/>
+                </div></article>
+            </a> #}
+{# 
+            <a class="dna" href="#" title="Toxicology">
+                <article class="category">
+                <div
+                    class="image"
+                    style="
+                    background-image: url(wp-content/uploads/2018/08/dna.jpg);">
+                    <div class="icon">
+                    <img
+                        width="40"
+                        height="40"
+                        src="{{ asset('wp-content/uploads/2018/08/dna-icon.png') }}"
+                        alt=""
+                    />
+                    </div>
+                </div>
+
+                <h3 style="font-size: 25px;">Toxicology</h3>
+                <div class="text">
+                    Well healths labs offers best testing results.
+                    <img
+                    width="16"
+                    height="16"
+                    src="{{ asset('images/link-button.png') }}"
+                    alt=""
+                    />
+                </div>
+            </article>
+            </a>
+
+            <a class="std" href="#" title="Respiratory Pathogens"
+                ><article class="category">
+                <div
+                    class="image"
+                    style="
+                    background-image: url(wp-content/uploads/2018/08/sexual-health.jpg);">
+                    <div class="icon">
+                    <img
+                        width="43"
+                        height="42"
+                        src="{{ asset('wp-content/uploads/2018/08/sexual-health-icon.png') }}"
+                        alt=""
+                    />
+                    </div>
+                </div>
+
+                <h3 style="font-size: 25px;">Respiratory Pathogens</h3>
+                <div class="text">
+                    Well healths labs offers best testing results.
+                    <img
+                    width="16"
+                    height="16"
+                    src="{{ asset('images/link-button.png') }}"
+                    alt=""
+                    />
+                </div></article>
+            </a>
+
+            <a
+                class="drugs-alcohol"
+                href="#"
+                title="Gastrointestinal Pathogens"
+                ><article class="category">
+                <div
+                    class="image"
+                    style="
+                    background-image: url(wp-content/uploads/2018/08/drugs-alcohol.jpg);">
+                    <div class="icon">
+                    <img
+                        width="43"
+                        height="42"
+                        src="{{ asset('wp-content/uploads/2018/08/drugs-alcohol-icon.png') }}"
+                        alt=""
+                    />
+                    </div>
+                </div>
+
+                <h3 style="font-size: 25px;">Gastrointestinal Pathogens</h3>
+                <div class="text">
+                    Well healths labs offers best testing results.
+                    <img
+                    width="16"
+                    height="16"
+                    src="{{ asset('images/link-button.png') }}"
+                    alt=""
+                    />
+                </div></article></a>
+
+            <a
+                class="additional-tests"
+                href="#"
+                title="Wound Pathogens"
+                ><article class="category">
+                <div
+                    class="image"
+                    style="
+                    background-image: url(wp-content/uploads/2018/08/more-tests.jpg);">
+                    <div class="icon">
+                    <img
+                        width="43"
+                        height="42"
+                        src="{{ asset('wp-content/uploads/2018/08/more-tests-icon.png') }}"
+                        alt=""
+                    />
+                    </div>
+                </div>
+
+                <h3 style="font-size: 25px;">Wound Pathogens</h3>
+                <div class="text">
+                    Well healths labs offers best testing results.
+                    <img
+                    width="16"
+                    height="16"
+                    src="{{ asset('images/link-button.png') }}"
+                    alt=""
+                    />
+                </div></article>
+            </a>
+
+            <a class="covid-19" href="#" title="Hair, Nail/Paronychia pathogens"
+                ><article class="category">
+                <div
+                    class="image"
+                    style="
+                    background-image: url(wp-content/uploads/2021/12/imagen-banner-covid.jpg);">
+                    <div class="icon">
+                    <img
+                        width="42"
+                        height="42"
+                        src="{{ asset('wp-content/uploads/2021/12/icono-covid-mini.png') }}"
+                        alt=""
+                    />
+                    </div>
+                </div>
+
+                <h3 style="font-size: 25px;">Hair, Nail/ Paronychia pathogens</h3>
+                <div class="text">
+                    Well healths labs offers best testing results.
+                    <img
+                    width="16"
+                    height="16"
+                    src="{{ asset('images/link-button.png') }}"
+                    alt=""
+                    />
+                </div></article
+            ></a>
+             #}
+            </section>
+        </div>
+        </section>

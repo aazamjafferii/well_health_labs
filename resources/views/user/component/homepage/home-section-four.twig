@@ -1,0 +1,105 @@
+<section class="popular-test">
+	<div class="inside">
+
+		<article class="text">
+			
+            {# <h2>Our most popular tests</h2>
+            You have questions about your health. We can help you get answers, fast. In and out and on your way to a healthier life. #}
+
+            {{ block.heading|raw }}
+            {{ block.simple_text|raw }}
+			
+		</article>
+
+		<section class="tests">
+
+        {% for editor_icon in block.editor_icon %}
+
+            <article class="test">
+				<div class="image">
+					<img width="43" height="42" src="{{ asset('storage/'~editor_icon.icon.path) }}" alt=""/>
+				</div>
+
+                {{ editor_icon.text_editor|raw }}
+                
+            </article>
+        
+        {% endfor %}
+
+			{# <article class="test">
+				<div class="image">
+					<img width="43" height="42" src="{{ asset('wp-content/themes/altn2018/img/more-tests-icon.png') }}" alt=""/>
+				</div>
+				<div class="name">
+					<a href="#" title="Covid-19">
+						Covid-19</a>
+				</div>
+
+				<div class="button-side">
+					<a href="#" class="buy" title="Learn More about Annual Check-Up Panel">
+						Learn More</a>
+				</div>
+			</article> #}
+
+			{# <article class="test">
+				<div class="image">
+					<img width="43" height="42" src="{{ asset('wp-content/themes/altn2018/img/more-tests-icon.png') }}" alt=""/>
+				</div>
+				<div class="name">
+					<a href="#" title="Gastrointestinal">
+						Gastrointestinal</a>
+				</div>
+
+				<div class="button-side">
+					<a href="#" class="buy" title="Learn More about STD Panel, Comprehensive">
+						Learn More</a>
+				</div>
+			</article> #}
+
+			{# <article class="test">
+				<div class="image">
+					<img width="43" height="42" src="{{ asset('wp-content/themes/altn2018/img/more-tests-icon.png') }}" alt=""/>
+				</div>
+				<div class="name">
+					<a href="#" title="Uti (incl. drug resistance)">Uti (incl. drug resistance)</a>
+				</div>
+
+				<div class="button-side">
+					<a href="#" class="buy" title="Learn More about Paternity Informational (Non-Legal)">
+						Learn More</a>
+				</div>
+			</article> #}
+
+			{# <article class="test">
+				<div class="image">
+					<img width="43" height="42" src="{{ asset('wp-content/themes/altn2018/img/more-tests-icon.png') }}" alt=""/>
+				</div>
+				<div class="name">
+					<a href="#" title="Sti/std">
+						Sti/std</a>
+				</div>
+
+				<div class="button-side">
+					<a href="#" class="buy" title="Learn More about Cholesterol (Lipid) Panel">
+						Learn More</a>
+				</div>
+			</article> #}
+
+			{# <article class="test">
+				<div class="image">
+					<img width="43" height="42" src="{{ asset('wp-content/themes/altn2018/img/more-tests-icon.png') }}" alt=""/>
+				</div>
+				<div class="name">
+					<a href="#" title="diabetes/obesity">
+						diabetes/obesity</a>
+				</div>
+
+				<div class="button-side">
+					<a href="#" class="buy" title="Learn More about 5-Panel Instant*">
+						Learn More</a>
+				</div>
+			</article> #}
+
+		</section>
+	</div>
+</section>

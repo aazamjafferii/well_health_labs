@@ -1,0 +1,70 @@
+{# {{ dump(block.editor_text_repeater[0].simple_text) }} #}
+<div class="et_pb_section et_pb_section_1 medical_book_section et_section_regular">
+            <div class="et_pb_row et_pb_row_0 et_pb_row_fullwidth et_pb_equal_columns et_pb_gutters1 et_pb_row_4col">
+                <div class="et_pb_column et_pb_column_1_4 et_pb_column_0  et_pb_css_mix_blend_mode_passthrough">
+                    <div class="et_pb_module et_pb_cta_0 et_pb_promo  et_pb_text_align_left et_pb_bg_layout_dark et_pb_no_bg">
+                        <div class="et_pb_promo_description">
+                            {# <h2 class="et_pb_module_header">LAB Houston</h2> #}
+                            <h2 class="et_pb_module_header">
+                                {{ block.editor_text_repeater[0].simple_text }}
+                            </h2>
+                            <div>
+                                <p>
+                                    {{ block.editor_text_repeater[0].text_editor|raw }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="et_pb_column et_pb_column_1_4 et_pb_column_1  et_pb_css_mix_blend_mode_passthrough">
+                    <div class="et_pb_module et_pb_cta_1 et_pb_promo  et_pb_text_align_left et_pb_bg_layout_dark et_pb_no_bg">
+                        <div class="et_pb_promo_description">
+                            <h2 class="et_pb_module_header">
+                                {{ block.editor_text_repeater[1].simple_text }}
+                            </h2>
+                            <div>
+                                {{ block.editor_text_repeater[1].text_editor|raw }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="et_pb_column et_pb_column_1_4 et_pb_column_2  et_pb_css_mix_blend_mode_passthrough">
+                    <div class="et_pb_module et_pb_cta_2 et_pb_promo  et_pb_text_align_left et_pb_bg_layout_dark et_pb_no_bg">
+                        <div class="et_pb_promo_description">
+                            <h2 class="et_pb_module_header">
+                                {{ block.editor_text_repeater[2].simple_text }}
+                            </h2>
+                            <div>
+                                {# <p>Mon – Fri: 8am – 5pm<br>Saturday: 9am– 5pm<br>Sunday: 11am – 4pm</p> #}
+
+                                {{ block.editor_text_repeater[2].text_editor|raw }}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="et_pb_column et_pb_column_1_4 et_pb_column_3  et_pb_css_mix_blend_mode_passthrough et-last-child">
+                    <div class="et_pb_module et_pb_cta_3 et_pb_promo  et_pb_text_align_left et_pb_bg_layout_dark et_pb_no_bg">
+                        <div class="et_pb_promo_description">
+                            <h2 class="et_pb_module_header">
+                                {{ block.editor_text_repeater[3].simple_text }}
+                            </h2>
+                            <div>
+                                {{ block.editor_text_repeater[3].text_editor|raw }}
+                                {# <div class="contact-address contact-media">
+                                    Phone:
+                                    <span>
+                                        Phone: (123) 123-1234
+                                        {{ variable('contact_info', 'contact_number') }}
+                                    </span>
+                                </div>
+                                <div class="contact-address contact-media">
+                                    Don't Delay, Call Now
+                                </div> #}
+                            
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>

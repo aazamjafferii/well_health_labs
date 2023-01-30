@@ -1,0 +1,238 @@
+<footer>
+  <div class="inside-footer">
+    <section class="footer-information flex noresponsive">
+      <aside class="" style="width:50%">
+        <div class="menu-company-container">
+          <ul id="menu-company" class="menu">
+            <li
+              id="menu-item-2878"
+              class="heading menu-item menu-item-type-custom menu-item-object-custom menu-item-2878">
+              <a href="#">Labs Locations</a>
+            </li>
+            <li
+              id="menu-item-2879"
+              class="title menu-item menu-item-type-post_type menu-item-object-page menu-item-2879">
+              <a title="Well Heaths labs Houston" href="#"
+                >Well Heaths Labs Houston</a
+              >
+            </li>
+            <li
+              id="menu-item-2880"
+              class="description menu-item menu-item-type-post_type menu-item-object-page menu-item-2880">
+              <a
+                title=""
+                href="#">
+                7557 South Fwy, Suit 7557 Houston, Tx 77021 <br/>
+                P: 346.273.4500 F: 346.275.1700 Well Health
+                </a
+              >
+            </li>
+            <li
+              id="menu-item-2881"
+              class="title menu-item menu-item-type-post_type menu-item-object-page menu-item-2881">
+              <a
+                title=""
+                href="#">
+                Labs Dallas
+                </a>
+            </li>
+            <li
+              id="menu-item-17794"
+              class="description menu-item menu-item-type-custom menu-item-object-custom menu-item-17794">
+              <a
+                title=""
+                target="_blank"
+                rel="noopener"
+                href="#">
+                350 Westpark Way Suite, 100B Euless, Tx 76040 <br/>
+                P: 817.786. F: 346.275.1700
+                </a
+              >
+            </li>
+
+          </ul>
+        </div>
+      </aside>
+
+
+      <aside class="" style="width:50%; text-align: right;">
+        <article class="phonetake" style="padding-right: 40px;">
+          <div class="text" style="margin-right: -5px;">Connect with us by phone</div>
+          <div class="phone" style="padding-right: 0px;">
+            <a href="tel:123-456-7890" title="123-456-7890">
+              123-456-7890
+            </a>
+          </div>
+        </article>
+
+        <nav class="socialtake">
+          <div class="text">Connect with us on social media</div>
+          <div class="social-icons" style="margin-right: -12px;">
+            <div class="social">
+              <img src="{{ asset('images/icons8-facebook.png') }}" />
+
+            </div>
+
+            <div class="social">
+              <img src="{{ asset('images/icons8-twitter.png') }}" style="width: 48px;" />
+
+            </div>
+
+            <div class="social">
+              <img src="{{ asset('images/icons8-youtube.png') }}" style="width: 45px;"/>
+
+            </div>
+
+            <div class="social">
+              <img src="{{ asset('images/icons8-linkedin.png') }}"/>
+
+            </div>
+
+            <div class="social">
+              <img src="{{ asset('images/icons8-instagram.png') }}" style="width: 45px;"/>
+
+            </div>
+          </div>
+
+        </nav>
+
+        <nav class="socialtake tableton">
+          <div class="text">Connect with us on social media</div>
+          <div class="social-icons">
+            <div class="social">
+              <img src="{{ asset('images/icons8-facebook.png') }}" />
+
+            </div>
+
+            <div class="social">
+              <img src="{{ asset('images/icons8-twitter.png') }}" style="width: 48px;" />
+
+            </div>
+
+            <div class="social">
+              <img src="{{ asset('images/icons8-youtube.png') }}" style="width: 45px;"/>
+
+            </div>
+
+            <div class="social">
+              <img src="{{ asset('images/icons8-linkedin.png') }}"/>
+
+            </div>
+
+            <div class="social">
+              <img src="{{ asset('images/icons8-instagram.png') }}" style="width: 45px;"/>
+
+            </div>
+          </div>
+
+        </nav>
+
+        <div class="" style="">
+
+            <section id="copyright">
+              &copy; Copyrights 2022 Well Healths Labs
+            </section>
+
+            <nav id="footer-term">
+              <div class="menu-footer-container">
+                <ul id="menu-footer" class="menu">
+                  <li
+                    id="menu-item-2893"
+                    class="menu-item menu-item-type-post_type menu-item-object-page menu-item-privacy-policy menu-item-2893"
+                  >
+                    <a title="Privacy Statement" href="#"
+                      >Privacy Statement</a
+                    >
+                  </li>
+                  <li
+                    id="menu-item-2894"
+                    class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2894"
+                  >
+                    <a title="Terms of Use" href="#"
+                      >Terms of Use</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </nav>
+
+          </div>
+
+
+      </aside>
+    </section>
+  </div>
+
+  <section class="footer-information container responsive">
+
+
+    <aside class="textcenter">
+      <article class="phonetake">
+        <div class="text" style="padding-bottom: 20px; margin-top: -30px;">
+            {{ ucwords("LABS LOCATIONS") }}
+        </div>
+        <div class="phone" style="font-size: 20px;">
+          <a href="" title="1-800-384-4567" style="text-decoration: none;">
+           <p style="margin-bottom: -10px;"> {{ ucwords("Well Heaths labs Houston") }}</p></a>
+            <br/>
+          <a
+          title=""
+          href="#" style="text-decoration: none;">
+          <p style="margin-bottom: -10px;"> 7557 South Fwy, Suit 7557 Houston, Tx 77021
+          P: 346.273.4500 F: 346.275.1700well health</p></a>
+          <br/>
+          <a
+          title=""
+          href="#" style="text-decoration: none;">
+          <p style="margin-bottom: -10px;">Labs Dallas</p></a>
+          <br/>
+          <a
+          title=""
+          href="#" style="text-decoration: none;">
+          <p>350 Westpark Way Suite, 100B Euless, Tx 76040
+              P: 817.786. F: 346.275.1700</p></a>
+        </div>
+      </article>
+
+      <article class="phonetake">
+        <div class="text">Connect with us by phone</div>
+        <div class="phone">
+          <a href="tel:18003844567" title="1-800-384-4567"
+            >1-800-384-4567</a
+          >
+        </div>
+      </article>
+
+      <nav class="socialtake">
+        <div class="text">Connect with us on social media</div>
+        <div class="social-icons">
+          <div class="social">
+            <img src="{{ asset('images/icons8-facebook.png') }}"/>
+
+          </div>
+
+          <div class="social">
+            <img src="{{ asset('images/icons8-twitter.png') }}" style="width: 48px;"/>
+
+          </div>
+
+          <div class="social">
+            <img src="{{ asset('images/icons8-youtube.png') }}" style="width: 45px;"/>
+
+          </div>
+
+          <div class="social">
+            <img src="{{ asset('images/icons8-linkedin.png') }}" />
+
+          </div>
+
+          <div class="social">
+            <img src="{{ asset('images/icons8-instagram.png') }}" style="width: 45px;"/>
+
+          </div>
+        </div>
+      </nav>
+    </aside>
+  </section>
+
+</footer>

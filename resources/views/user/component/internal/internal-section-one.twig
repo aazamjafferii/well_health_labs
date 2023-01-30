@@ -1,0 +1,52 @@
+<section class="column2" style="margin-bottom: -10px;">
+	<div class="parallax-window image" data-parallax="scroll">
+		<div class="">
+			<article class="d-flex">
+				<div class="column internal-column left">
+
+					<article class="article" style="">
+
+						{{ block.heading|raw }}
+						{{ block.sub_heading|raw }}
+						{{ block.text_editor|raw }}
+
+					</article>
+				</div>
+
+				<div class="column internal-column flex-1">
+					<section class="article">
+
+						{% for icon_text_editor in block.icon_text_editor %}
+							<article class="test">
+								<div class="image">
+									<img width="43" height="42" src="{{ asset('storage/'~icon_text_editor.icon.path) }}" alt=""/>
+								</div>
+
+								<div class="name">
+									{{ icon_text_editor.simple_text|raw }}
+								</div>
+
+								<div class="button-side">
+									{{ icon_text_editor.text_editor|raw }}
+								</div>
+
+							</article>
+						{% endfor %}
+
+						<article class="test">
+
+							<div class="btn">
+
+								{{  block.button|raw }}
+
+							</div>
+
+						</article>
+
+					</section>
+
+				</div>
+			</article>
+		</div>
+	</div>
+</section>
