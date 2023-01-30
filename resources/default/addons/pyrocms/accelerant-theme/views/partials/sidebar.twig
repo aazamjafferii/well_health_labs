@@ -6,7 +6,7 @@
 {% endfor %} #}
 
     <ul>
-        {% for key, navigation in template.cp.navigation if "navigation" in navigation.title or "pages" in navigation.title %}
+        {% for key, navigation in template.cp.navigation if "navigation" in navigation.title or "pages" in navigation.title or "files" in navigation.title or "users" in navigation.title or "posts" in navigation.title or "settings" in navigation.title %}
         
             
             <li class="{{ navigation.active ? 'active' }} variant-border" data-slug="{{ navigation.slug }}">
